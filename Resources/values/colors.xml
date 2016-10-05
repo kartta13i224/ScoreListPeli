@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="colorPrimary">#00438E</color>
+  <color name="colorPrimaryDark">#00336D</color>
+  <color name="colorAccent">#FF4081</color>
+  <color name="List.Item.Corners">#00438E</color>
+  <color name="List.Item.Corners.Darker">#002c5e</color>
+  <color name="List.Item.Selected">#1483FF</color>
+  <color name="List.Item.NotSelected">#ABD3FF</color>
+  <color name="List.Item.Disabled">#6e87a3</color>
+  <color name="Text.URL_Color">#7BBAFF</color>
+  <color name="Text.Color">#000000</color>
+  <color name="Background">#ABD3FF</color>
+</resources>

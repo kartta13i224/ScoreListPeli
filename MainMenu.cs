@@ -20,7 +20,7 @@ namespace ScoreListPeli
             base.OnCreate(savedInstanceState);
 
             // Create your application here
-            SetContentView(Resource.Layout.layout1);
+            SetContentView(Resource.Layout.mainMenu);
 
 
         }

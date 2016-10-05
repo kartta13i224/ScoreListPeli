@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Hello">Hello World, Click Me!</string>
+    <string name="poisto">POISTA TÄMÄ TEKSTI VÄLITTÖMÄSTI T. AUTOMAATIO ASENTAJA.</string>
+    <string name="jumala">Jumalan kämmeeneellä kaikki kuolee.</string>
+    <string name="ApplicationName">Clicky Fruitmix 3000</string>
+</resources>

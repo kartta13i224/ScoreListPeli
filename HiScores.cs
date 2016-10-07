@@ -17,7 +17,6 @@ namespace ScoreListPeli
     public class HiScores : Activity
     {
         // Fixed items.
-        // 
 
         //LIST OF ARRAY STRINGS WHICH WILL SERVE AS LIST ITEMS
         private ListView mListView = null;
@@ -34,20 +33,20 @@ namespace ScoreListPeli
             // and attach an event to it
             mListView = FindViewById<Android.Widget.ListView>(Resource.Id.listView);
 
-            Android.Widget.Button button = FindViewById<Android.Widget.Button>(Resource.Id.btn1);
+            getHighScores();
 
-            button.Click += async (sender, e) =>
-            {
+        }
+
+        private async void getHighScores()
+        {
                 // URL where to get data from.
                 string URL = "http://home.tamk.fi/~e5tjokin/scorelist/HiScores.json";
 
                 string ScoreJSON = await FetchScoreList(URL);
                 // Call function to parse it.
-                ParseScoreList(ScoreJSON);
-            };
-
-
+                ParseScoreList(ScoreJSON); 
         }
+
 
         private async Task<string> FetchScoreList(string URL)
         {

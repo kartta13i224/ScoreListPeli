@@ -2320,9 +2320,6 @@ namespace ScoreListPeli
 			// aapt resource value: 0x7f07002a
 			public const int bottom = 2131165226;
 			
-			// aapt resource value: 0x7f07009c
-			public const int btn1 = 2131165340;
-			
 			// aapt resource value: 0x7f070044
 			public const int buttonPanel = 2131165252;
 			
@@ -2458,8 +2455,8 @@ namespace ScoreListPeli
 			// aapt resource value: 0x7f07000b
 			public const int listMode = 2131165195;
 			
-			// aapt resource value: 0x7f07009d
-			public const int listView = 2131165341;
+			// aapt resource value: 0x7f07009c
+			public const int listView = 2131165340;
 			
 			// aapt resource value: 0x7f070041
 			public const int list_item = 2131165249;

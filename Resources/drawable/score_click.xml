@@ -5,7 +5,6 @@
       <stroke android:color="@color/List.Item.Corners"
       android:width="5sp"/>
       <solid android:color="@color/List.Item.Selected" />
-      <corners android:radius="5sp" />
     </shape>
   </item>
   <item android:state_enabled="false">
@@ -13,7 +12,6 @@
       <stroke android:color="@color/List.Item.Corners.Darker"
       android:width="5sp"/>
       <solid android:color="@color/List.Item.Disabled" />
-      <corners android:radius="5sp" />
     </shape>
   </item>
   <item>
@@ -21,7 +19,6 @@
       <stroke android:color="@color/List.Item.Corners"
       android:width="5sp"/>
       <solid android:color="@color/List.Item.NotSelected" />
-      <corners android:radius="5sp" />
     </shape>
   </item>
 </selector>

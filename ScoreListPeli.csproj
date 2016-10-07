@@ -84,7 +84,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HiScoreObj.cs" />
+    <Compile Include="Classes\FallObject_normal.cs" />
+    <Compile Include="Classes\HiScoreObj.cs" />
     <Compile Include="HiScores.cs" />
     <Compile Include="MainMenu.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -131,6 +132,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\styles.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\ListItemBg.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

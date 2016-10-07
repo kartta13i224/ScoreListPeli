@@ -4,22 +4,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/item_score_row"
-    android:background="@drawable/score_click">
+    android:background="@drawable/ListItemBg">
     <TextView
         android:id="@+id/nick"
-        android:layout_width="wrap_content"
+        android:text="@string/Placeholder.nick"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="textStart"
         android:layout_weight="1"
-        android:gravity="start"
+        android:gravity="center_vertical"
         android:layout_marginLeft="10sp"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:textColor="@+color/Text.Color" />
     <TextView
         android:id="@+id/points"
-        android:layout_width="wrap_content"
+        android:text="@string/Placeholder.points"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="textEnd"
         android:layout_weight="1"
-        android:gravity="end"
-        android:textSize="30sp" />
+        android:gravity="center_vertical"
+        android:textSize="30sp"
+        android:textColor="@+color/Text.Color"
+        android:layout_marginRight="10sp"
+        android:paddingEnd="10sp"
+        android:paddingRight="10sp"
+        android:layout_gravity="center_vertical"
+        android:textAllCaps="true" />
 </LinearLayout>

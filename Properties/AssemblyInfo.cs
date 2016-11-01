@@ -7,7 +7,7 @@ using Android.App;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Clicky Fruitmix 3000")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A fruity filled fun game with mad melonman from melon factory!")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Clicky Fruitmix 3000")]

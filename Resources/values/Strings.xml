@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="Hello">Hello World, Click Me!</string>
+
+
+    <string name="Button.StartGame">Start Game</string>
+    <string name="Button.RestartGame">Restart Game</string>
+    <string name="Button.HighScores">High Scores</string>
+    <string name="Button.Rate">Rate App</string>
+  
     <string name="Placeholder.nick">Place holder nickname</string>
     <string name="Placeholder.points">1000</string>
     <string name="ApplicationName">Clicky Fruitmix 3000</string>

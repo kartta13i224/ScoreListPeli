@@ -3,11 +3,19 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/ScoreListLayout">
+    android:id="@+id/ScoreListLayout"
+    android:background="@drawable/rainbow_texture679532534">
+    <ImageView
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/HighScoreTitle"
+        android:src="@drawable/HighScores_Title" />
     <ListView
-        android:minWidth="25px"
-        android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/listView" />
+        android:id="@+id/listView"
+        android:paddingLeft="35sp"
+        android:paddingRight="35sp" />
 </LinearLayout>

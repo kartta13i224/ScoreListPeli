@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace ScoreListPeli
 {
-    [Activity(Label = "HiScores", MainLauncher = true, Icon = "@drawable/icon")]
+    [Activity(Label = "HiScores")]
     public class HiScores : Activity
     {
         // Fixed items.
@@ -43,32 +43,44 @@ namespace ScoreListPeli
                 string URL = "http://home.tamk.fi/~e5tjokin/scorelist/HiScores.json";
 
                 string ScoreJSON = await FetchScoreList(URL);
-                // Call function to parse it.
-                ParseScoreList(ScoreJSON); 
+                // Call function to parse it if not null.
+                if (ScoreJSON != null)
+                    ParseScoreList(ScoreJSON);
+                else
+                {
+                    Android.Widget.Toast.MakeText(this, "Check your internet connection!", Android.Widget.ToastLength.Short).Show();
+                }
         }
 
 
         private async Task<string> FetchScoreList(string URL)
         {
 
-
             // Create an HTTP web request using the URL:
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(URL));
             request.ContentType = "application/json";
             request.Method = "GET";
 
-            // Send the request to the server and wait for the response:
-            using (WebResponse response = await request.GetResponseAsync())
-            {
-                string ScoreText;
-                using (var sr = new StreamReader(response.GetResponseStream()))
-                {
-                    ScoreText = sr.ReadToEnd();
-                    Console.Out.WriteLine("Response: {0}", ScoreText);
-                    
-                }
-                return ScoreText;
 
+            try
+            {
+                // Send the request to the server and wait for the response:
+                using (WebResponse response = await request.GetResponseAsync())
+                {
+                    string ScoreText;
+                    using (var sr = new StreamReader(response.GetResponseStream()))
+                    {
+                        ScoreText = sr.ReadToEnd();
+                        Console.Out.WriteLine("Response: {0}", ScoreText);
+
+                    }
+
+                    return ScoreText;
+                }
+            }
+            catch (WebException ex) {
+                Console.Out.WriteLine("Internet connection error!");
+                return null;
             }
         }
 
@@ -84,7 +96,7 @@ namespace ScoreListPeli
             {
                 // LINK DATA; DESERIALIZE
                 HiScoreObj obj = JsonConvert.DeserializeObject<HiScoreObj> (ScoreJSON);
-                Android.Widget.Toast.MakeText(this, "Data haettu!", Android.Widget.ToastLength.Short).Show();
+                //Android.Widget.Toast.MakeText(this, "Data haettu!", Android.Widget.ToastLength.Short).Show();
                 
                 scoreList.Clear(); // Remove old entries from the hiscore list.
                 foreach (var ScoreObj in obj.HiScores)

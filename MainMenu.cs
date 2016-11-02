@@ -38,7 +38,6 @@ namespace ScoreListPeli
 
             HighScores.Click += delegate
             {
-                // TODO open highscore activity
                 Console.Out.WriteLine("High Score List button pressed!");
                 StartActivity(typeof(HiScores));
             };

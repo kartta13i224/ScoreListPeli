@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="Hello">Hello World, Click Me!</string>
-
-
     <string name="Button.StartGame">Start Game</string>
     <string name="Button.RestartGame">Restart Game</string>
     <string name="Button.HighScores">High Scores</string>

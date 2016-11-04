@@ -16,16 +16,48 @@ namespace ScoreListPeli
     public class MainMenu : Activity
     {
 
+        // INSTALL_FAILED_UPDATE_INCOMPATIBLE <- Poista ohjelma laitteesta.
+
         Button StartGame;
         Button HighScores;
         Button Rate;
+        TextView Text;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
             // Create your application here
-            SetContentView(Resource.Layout.mainMenu);
+            
+
+            
+
+            var metrics = Resources.DisplayMetrics;
+            var widthInDp = ConvertPixelsToDp(metrics.WidthPixels);
+            var heightInDp = ConvertPixelsToDp(metrics.HeightPixels);
+
+            
+
+            string temp = widthInDp.ToString();
+            int width = Int32.Parse(temp);
+
+            if (width >= 600)
+            {
+                Console.Out.WriteLine("Large view activated.");
+                SetContentView(Resource.Layout.mainMenu_sw600dp);
+            }
+            else if (width >= 360)
+            {
+                Console.Out.WriteLine("Medium view activated.");
+                SetContentView(Resource.Layout.mainMenu_sw360dp);
+            }
+            else
+            {
+                Console.Out.WriteLine("Small view activated.");
+                SetContentView(Resource.Layout.mainMenu);
+            }
+                
+
 
             StartGame = FindViewById<Button>(Resource.Id.BTN_NewGame);
             HighScores = FindViewById<Button>(Resource.Id.BTN_HighScore);
@@ -34,6 +66,7 @@ namespace ScoreListPeli
             StartGame.Click += delegate {
                 // TODO open new game activity
                 Console.Out.WriteLine("New game button pressed!");
+                StartActivity(typeof(GameScreen));
             };
 
             HighScores.Click += delegate
@@ -49,5 +82,10 @@ namespace ScoreListPeli
             };
         }
 
+        private object ConvertPixelsToDp(float pixelValue)
+        {
+            var dp = (int)((pixelValue) / Resources.DisplayMetrics.Density);
+            return dp;
+        }
     }
 }

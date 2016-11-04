@@ -16,6 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/listView"
-        android:paddingLeft="10sp"
-        android:paddingRight="10sp" />
+        android:paddingLeft="35sp"
+        android:paddingRight="35sp" />
 </LinearLayout>

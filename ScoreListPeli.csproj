@@ -45,11 +45,11 @@
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Android Game\Activity\GameScreen.cs" />
     <Compile Include="Classes\Coordinate.cs" />
     <Compile Include="Classes\DrawObject.cs" />
     <Compile Include="Classes\FallObject_normal.cs" />
     <Compile Include="Classes\HiScoreObj.cs" />
-    <Compile Include="Android Game\Activity\GameScreen.cs" />
     <Compile Include="Android Game\Activity\HiScores.cs" />
     <Compile Include="Android Game\Activity\MainMenu.cs" />
     <Compile Include="Android Game\ObjDrawer.cs" />
@@ -62,9 +62,6 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <AndroidResource Include="Resources\layout\GameScreen.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
     <None Include="GettingStarted.Xamarin" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />

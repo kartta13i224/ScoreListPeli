@@ -1,13 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 
 namespace ScoreListPeli
@@ -23,29 +17,25 @@ namespace ScoreListPeli
         Button Rate;
         // TextView Text;
 
-        private int width;
-        private int height;
+        // Variables that store screen size.
+        private int w_px;
+        private int h_px;
+        private float w_dp;
+        private float h_dp;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
             // Create your application here
-            var metrics = Resources.DisplayMetrics;
-            var widthInDp = ConvertPixelsToDp(metrics.WidthPixels);
-            var heightInDp = ConvertPixelsToDp(metrics.HeightPixels);
+            setScreenVariables();
 
-            string temp = widthInDp.ToString();
-            width = Int32.Parse(temp);
-            temp = heightInDp.ToString();
-            height = Int32.Parse(temp);
-
-            if (width >= 600)
+            if (w_dp >= 600)
             {
                 Console.Out.WriteLine("Large view activated.");
                 SetContentView(Resource.Layout.mainMenu_sw600dp);
             }
-            else if (width >= 360)
+            else if (w_dp >= 360)
             {
                 Console.Out.WriteLine("Medium view activated.");
                 SetContentView(Resource.Layout.mainMenu_sw360dp);
@@ -66,8 +56,8 @@ namespace ScoreListPeli
                 // TODO open new game activity
                 Console.Out.WriteLine("New game button pressed!");
                 var GameActivity = new Intent(this, typeof(GameScreen));
-                GameActivity.PutExtra("DevHeight", height);
-                GameActivity.PutExtra("DevWidth", width);
+                GameActivity.PutExtra("DevHeight", h_px);
+                GameActivity.PutExtra("DevWidth", w_px);
                 StartActivity(GameActivity);
             };
 
@@ -84,10 +74,20 @@ namespace ScoreListPeli
             };
         }
 
-        private object ConvertPixelsToDp(float pixelValue)
+        private float ConvertPixelsToDp(float pixelValue)
         {
-            var dp = (int)((pixelValue) / Resources.DisplayMetrics.Density);
+            float dp = (int)((pixelValue) / Resources.DisplayMetrics.Density);
             return dp;
+        }
+
+        private void setScreenVariables()
+        {
+            var metrics = Resources.DisplayMetrics;
+            w_px = metrics.WidthPixels;
+            h_px = metrics.HeightPixels;
+
+            w_dp = ConvertPixelsToDp(w_px);
+            h_dp = ConvertPixelsToDp(h_px);
         }
     }
 }

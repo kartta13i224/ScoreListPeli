@@ -15,8 +15,8 @@ namespace ScoreListPeli
     [Activity(Label = "GameScreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
 	public class GameScreen : Activity
 	{
+        private static string LOG_TAG = "GameScreen_Activity"; // Activity log tag.
 
-        private static string LOG_TAG = "GameScreen_Activity";
         protected ObjDrawer mObjDrawer;
         private int width = 0;
         private int height = 0;
@@ -26,9 +26,7 @@ namespace ScoreListPeli
             Console.Out.WriteLine(LOG_TAG + " in onCreate");
 			base.OnCreate(savedInstanceState);
 
-            // Create your application here
-
-            //var getIntent = new Intent();
+            // Get device pixel height and width.
             height = Intent.GetIntExtra("DevHeight", height);
             width = Intent.GetIntExtra("DevWidth", width);
 
@@ -36,14 +34,56 @@ namespace ScoreListPeli
             Console.Out.WriteLine("Device Width" + width);
 
             // Set our view from the "main" layout resource
+            // Setup the drawer.
             mObjDrawer = new ObjDrawer(this, width, height);
             SetContentView(mObjDrawer);
-
-            // Setup the drawer.
-            
-
-
-
         }
-	}
+
+        public void reDraw(View v)
+        {
+            mObjDrawer.Invalidate();
+        }
+
+        public override bool OnTouchEvent(MotionEvent e)
+        {
+            float x = e.GetX();
+            float y = e.GetY();
+
+            // TODO Scale x and y to game screen.
+
+            // TODO calculate slash distance.
+
+            // TODO remove any objects which were "slashed" over.
+
+            // TODO increase user's highscore.
+
+            // TODO implement user high score.
+
+            // TODO implement user health.
+
+            // TODO show user health.
+
+            // TODO show user highscore.
+            if (e.Action == MotionEventActions.Down)
+            {
+                // User pressed the screen.
+                Console.Out.Write(" - Pointer location: X:");
+                Console.Out.Write(x);
+                Console.Out.Write(" Y:");
+                Console.Out.WriteLine(y);
+            }
+
+            else if (e.Action == MotionEventActions.Up)
+            {
+                // User released the finger.
+                Console.Out.Write(" - Pointer location: X:");
+                Console.Out.Write(x);
+                Console.Out.Write(" Y:");
+                Console.Out.WriteLine(y);
+            }
+
+            reDraw(CurrentFocus);
+            return base.OnTouchEvent(e);
+        }
+    }
 }

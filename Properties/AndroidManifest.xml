@@ -15,5 +15,6 @@
                     android:xlargeScreens="true"/>
   
   
-	<application android:label="Clicky Fruitmix 3000" android:icon="@drawable/Icon"></application>
+	<application android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen"
+    android:label="Clicky Fruitmix 3000" android:icon="@drawable/Icon"></application>
 </manifest>

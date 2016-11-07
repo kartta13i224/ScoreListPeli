@@ -20,25 +20,23 @@ namespace ScoreListPeli
     {
         
         // A fixed numbers for resizing components for the device's screen.
-        private static int GAME_WIDTH = 100;
-        private static int GAME_HEIGHT = 100;
+        private static int GAME_WIDTH = 400;
+        private static int GAME_HEIGHT = 800;
 
         // Multipliers to resize the components.
-        private double SCREEN_W_RATIO = 1;
-        private double SCREEN_H_RATIO = 1;
+        private float SCREEN_W_RATIO = 1;
+        private float SCREEN_H_RATIO = 1;
 
-        private ShapeDrawable _shape;
+        private int w_PX; // Device screen width in pixels.
+        private int h_PX; // Device screen height in pixels.
 
-        private int widthInDp; // Device screen width.
-        private int heightInDp; // Device screen height.
-        
 
         public ObjDrawer(Android.Content.Context context, int wDP, int hDP) :
             base(context)
         {
             SetBackgroundResource(Resource.Drawable.rainbow_texture679532534);
-            widthInDp = wDP;
-            heightInDp = hDP;
+            w_PX = wDP;
+            h_PX = hDP;
             Initialize();
         }
 
@@ -46,21 +44,12 @@ namespace ScoreListPeli
         {
             // TODO Initialization
 
-            SCREEN_H_RATIO = (double)heightInDp / (double)GAME_HEIGHT;
-            SCREEN_W_RATIO = (double)widthInDp / (double)GAME_WIDTH;
-            // Create android paint object.
-            var objPaint = new Paint();
-
-            // Set color
-            objPaint.SetARGB(255, 100, 125, 255);
-            objPaint.SetStyle(Paint.Style.Stroke);
-            objPaint.StrokeWidth = 4;
-
-            _shape = new ShapeDrawable(new OvalShape());
-            _shape.Paint.Set(objPaint);
+            SCREEN_H_RATIO = (float)h_PX / (float)GAME_HEIGHT;
+            SCREEN_W_RATIO = (float)w_PX / (float)GAME_WIDTH;
 
             // setShapeSize(_shape, coordinate(x,y), width, height);
-            _shape = setShapeSize(_shape, new Classes.Coordinate(50, 50), 25, 25);
+            // _shape = setShapeSize(_shape, new Classes.Coordinate(50, 50), 25, 25);
+            //_shape.SetBounds(400, 300, 800, 600);
 
         }
 
@@ -72,46 +61,52 @@ namespace ScoreListPeli
         // x max is the device's right side and x 0 is the left side of the device.
         // height is the shape's height.
         // width is the shape's width.
-        protected ShapeDrawable setShapeSize(ShapeDrawable inputShape, Classes.Coordinate coord, double width, double height){
+        protected RectF setShapeSize(RectF inputShape){
 
             // TODO CALCULATE BOUNDS
-            width = width * SCREEN_W_RATIO;
-            height = height * SCREEN_H_RATIO;
-
-            // TODO check that the bounds don't exceed the device's screen.
-
-            // Horizontal bound locations.
-            double leftSide = coord.x * SCREEN_W_RATIO;
-            double rightSide = coord.x + width;
-
-            // Vertical bound locations.
-            double topSide = coord.y * SCREEN_Y_RATIO;
-            double bottomSide = coord.y + height;
+            inputShape.Left = inputShape.Left * SCREEN_W_RATIO;
+            inputShape.Right = inputShape.Right * SCREEN_W_RATIO;
+            inputShape.Top = inputShape.Top * SCREEN_H_RATIO;
+            inputShape.Bottom = inputShape.Bottom * SCREEN_H_RATIO;
 
             //   SetBounds(int left side, int top side, int right side, int bottom side)
-            inputShape.SetBounds((int)leftSide, (int)topSide, (int)rightSide, (int)bottomSide);
+            // inputShape.SetBounds((int)leftSide, (int)topSide, (int)rightSide, (int)bottomSide);
 
             return inputShape;
         }
 
-
-
-
-
-        protected double widthRatio(int size)
+        protected Classes.Coordinate ConvertCoordinate(Classes.Coordinate input)
         {
-            return size * (widthInDp / 100);
+            input.x = input.x * SCREEN_W_RATIO;
+            input.y = input.y * SCREEN_H_RATIO;
+
+            return input;
         }
 
-        protected double heightRatio(int size)
+        private void drawCircle(Canvas currCanvas, Paint currPaint, int radius, Classes.Coordinate loc)
         {
-            return size * (heightInDp / 100);
+            loc = ConvertCoordinate(loc);
+            currCanvas.DrawCircle(loc.x, loc.y, radius, currPaint);
         }
 
         protected override void OnDraw (Canvas canvas)
         {
+            var paint = new Paint();
+
+            paint.SetARGB(250, 50, 125, 255);
+            paint.SetStyle(Paint.Style.Stroke);
+            paint.StrokeWidth = 5;
+
             // TODO draw functions
-            _shape.Draw(canvas);
+            
+            RectF ovalTemp = new RectF(0, GAME_HEIGHT-(GAME_HEIGHT/8), GAME_WIDTH, GAME_HEIGHT);
+            ovalTemp = setShapeSize(ovalTemp);
+            canvas.DrawOval(ovalTemp,paint);
+
+            Classes.Coordinate temp = new Classes.Coordinate(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+            paint.SetARGB(250, 255, 0, 0);
+            drawCircle(canvas, paint, 50, temp);
+
         }
     }
 }

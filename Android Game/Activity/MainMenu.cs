@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace ScoreListPeli
 {
-    [Activity(Label = "Fruity Click Mix 3000", MainLauncher = true, Icon = "@drawable/icon")]
+    [Activity(Label = "Fruity Click Mix 3000", MainLauncher = true, Icon = "@drawable/icon", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class MainMenu : Activity
     {
 
@@ -21,25 +21,24 @@ namespace ScoreListPeli
         Button StartGame;
         Button HighScores;
         Button Rate;
-        TextView Text;
+        // TextView Text;
+
+        private int width;
+        private int height;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
             // Create your application here
-            
-
-            
-
             var metrics = Resources.DisplayMetrics;
             var widthInDp = ConvertPixelsToDp(metrics.WidthPixels);
             var heightInDp = ConvertPixelsToDp(metrics.HeightPixels);
 
-            
-
             string temp = widthInDp.ToString();
-            int width = Int32.Parse(temp);
+            width = Int32.Parse(temp);
+            temp = heightInDp.ToString();
+            height = Int32.Parse(temp);
 
             if (width >= 600)
             {
@@ -66,7 +65,10 @@ namespace ScoreListPeli
             StartGame.Click += delegate {
                 // TODO open new game activity
                 Console.Out.WriteLine("New game button pressed!");
-                StartActivity(typeof(GameScreen));
+                var GameActivity = new Intent(this, typeof(GameScreen));
+                GameActivity.PutExtra("DevHeight", height);
+                GameActivity.PutExtra("DevWidth", width);
+                StartActivity(GameActivity);
             };
 
             HighScores.Click += delegate

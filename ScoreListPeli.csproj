@@ -45,12 +45,13 @@
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Classes\Coordinate.cs" />
     <Compile Include="Classes\DrawObject.cs" />
     <Compile Include="Classes\FallObject_normal.cs" />
     <Compile Include="Classes\HiScoreObj.cs" />
-    <Compile Include="Android Game\GameScreen.cs" />
-    <Compile Include="Android Game\HiScores.cs" />
-    <Compile Include="Android Game\MainMenu.cs" />
+    <Compile Include="Android Game\Activity\GameScreen.cs" />
+    <Compile Include="Android Game\Activity\HiScores.cs" />
+    <Compile Include="Android Game\Activity\MainMenu.cs" />
     <Compile Include="Android Game\ObjDrawer.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

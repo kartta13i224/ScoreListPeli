@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace ScoreListPeli
 {
-    [Activity(Label = "HiScores")]
+    [Activity(Label = "HiScores", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class HiScores : Activity
     {
         // Fixed items.

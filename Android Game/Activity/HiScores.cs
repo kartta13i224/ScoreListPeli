@@ -17,6 +17,7 @@ namespace ScoreListPeli
     public class HiScores : Activity
     {
         // Fixed items.
+        private static string LOG_TAG = "HiScores_Activity"; // Activity log tag.
 
         //LIST OF ARRAY STRINGS WHICH WILL SERVE AS LIST ITEMS
         private ListView mListView = null;
@@ -27,7 +28,7 @@ namespace ScoreListPeli
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-
+            Console.Out.WriteLine(LOG_TAG + " in onCreate");
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.ScoreList);
 

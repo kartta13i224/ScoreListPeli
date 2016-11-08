@@ -9,9 +9,8 @@ namespace ScoreListPeli
     [Activity(Label = "Fruity Click Mix 3000", MainLauncher = true, Icon = "@drawable/icon", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class MainMenu : Activity
     {
-
-        // INSTALL_FAILED_UPDATE_INCOMPATIBLE <- Poista ohjelma laitteesta.
-
+        private static string LOG_TAG = "MainMenu_Activity"; // Activity log tag.
+        
         Button StartGame;
         Button HighScores;
         Button Rate;
@@ -26,7 +25,7 @@ namespace ScoreListPeli
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
+            Console.Out.WriteLine(LOG_TAG + " in onCreate");
             // Create your application here
             setScreenVariables();
 
@@ -54,7 +53,7 @@ namespace ScoreListPeli
 
             StartGame.Click += delegate {
                 // TODO open new game activity
-                Console.Out.WriteLine("New game button pressed!");
+                Console.Out.WriteLine(LOG_TAG + " New game button pressed!");
                 var GameActivity = new Intent(this, typeof(GameScreen));
                 GameActivity.PutExtra("DevHeight", h_px);
                 GameActivity.PutExtra("DevWidth", w_px);
@@ -63,14 +62,14 @@ namespace ScoreListPeli
 
             HighScores.Click += delegate
             {
-                Console.Out.WriteLine("High Score List button pressed!");
+                Console.Out.WriteLine(LOG_TAG + " High Score List button pressed!");
                 StartActivity(typeof(HiScores));
             };
 
             Rate.Click += delegate
             {
                 // TODO Rate application
-                Console.Out.WriteLine("Rate button pressed!");
+                Console.Out.WriteLine(LOG_TAG + " Rate button pressed!");
             };
         }
 

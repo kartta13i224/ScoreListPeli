@@ -22,18 +22,29 @@ namespace ScoreListPeli
         // A fixed numbers for resizing components for the device's screen.
         private static int GAME_WIDTH = 400;
         private static int GAME_HEIGHT = 800;
+        private static int GAME_RATIO = GAME_HEIGHT / GAME_WIDTH;
+        private static int GAME_TEXT_SIZE = GAME_WIDTH / 10;
 
         // Multipliers to resize the components.
         private float SCREEN_W_RATIO = 1;
         private float SCREEN_H_RATIO = 1;
+        private float SCREEN_RATIO;
 
         private int w_PX; // Device screen width in pixels.
         private int h_PX; // Device screen height in pixels.
+
+        private static string LIVES_TEXT = "LVS ";
+        private int LIVES = 3;
+        private static string HIGH_SCORE_TEXT = "SCORE ";
+        private int HIGH_SCORE = 0;
+
+        private Bitmap heart;
 
 
         public ObjDrawer(Android.Content.Context context, int wDP, int hDP) :
             base(context)
         {
+            //mContext = context;
             SetBackgroundResource(Resource.Drawable.rainbow_texture679532534);
             w_PX = wDP;
             h_PX = hDP;
@@ -42,40 +53,36 @@ namespace ScoreListPeli
 
         private void Initialize()
         {
-            // TODO Initialization
-
+            // Initialize screen size ratios.
             SCREEN_H_RATIO = (float)h_PX / (float)GAME_HEIGHT;
             SCREEN_W_RATIO = (float)w_PX / (float)GAME_WIDTH;
-
-            // setShapeSize(_shape, coordinate(x,y), width, height);
-            // _shape = setShapeSize(_shape, new Classes.Coordinate(50, 50), 25, 25);
-            //_shape.SetBounds(400, 300, 800, 600);
-
+            SCREEN_RATIO = SCREEN_H_RATIO / SCREEN_W_RATIO;
+            Android.Content.Res.Resources res = Resources;
+            heart = BitmapFactory.DecodeResource(res, Resource.Drawable.Hart);
+            heart = ScaleBitmap(heart, 30, 30);
         }
 
-        // Set's the shape in a correct place at correct size/ratio depending on the device.
-        // inputShape is the given Shape which's bounds we need to modify.
-        // coord is a Coordinate object where the object should be placed in x = width and y = height.
-        // coord is the upper left corner of the object where it will be placed.
-        // y max is the device's bottom and y 0 is the top of the device.
-        // x max is the device's right side and x 0 is the left side of the device.
-        // height is the shape's height.
-        // width is the shape's width.
-        protected RectF setShapeSize(RectF inputShape){
 
-            // TODO CALCULATE BOUNDS
-            inputShape.Left = inputShape.Left * SCREEN_W_RATIO;
-            inputShape.Right = inputShape.Right * SCREEN_W_RATIO;
-            inputShape.Top = inputShape.Top * SCREEN_H_RATIO;
-            inputShape.Bottom = inputShape.Bottom * SCREEN_H_RATIO;
+        private Bitmap ScaleBitmap(Bitmap temp, int newWidth, int newHeight)
+        {
+            float width = temp.Width;
+            float height = temp.Height;
 
-            //   SetBounds(int left side, int top side, int right side, int bottom side)
-            // inputShape.SetBounds((int)leftSide, (int)topSide, (int)rightSide, (int)bottomSide);
+            float scaleWidth = (newWidth * SCREEN_W_RATIO) / width;
+            float scaleHeight = (newHeight * SCREEN_H_RATIO) / height;
 
-            return inputShape;
+            Matrix matrix = new Matrix();
+
+            matrix.PostScale(scaleWidth, scaleHeight);
+
+            Bitmap resizedBitmap = Bitmap.CreateBitmap(temp, 0, 0, (int)width, (int)height, matrix, false);
+
+            temp.Recycle();
+            return resizedBitmap;
         }
 
-        protected Classes.Coordinate ConvertCoordinate(Classes.Coordinate input)
+        // Converts Coordinates for display screen size.
+        private Classes.Coordinate ConvertCoordinate(Classes.Coordinate input)
         {
             input.x = input.x * SCREEN_W_RATIO;
             input.y = input.y * SCREEN_H_RATIO;
@@ -83,29 +90,86 @@ namespace ScoreListPeli
             return input;
         }
 
-        private void drawCircle(Canvas currCanvas, Paint currPaint, int radius, Classes.Coordinate loc)
+        // Converts bounds for display screen size.
+        private int[] convertBounds(float left, float top, float right, float bottom)
         {
-            loc = ConvertCoordinate(loc);
-            currCanvas.DrawCircle(loc.x, loc.y, radius, currPaint);
+            int[] bounds = new int[4];
+            bounds[0] = (int)(left * SCREEN_W_RATIO); // LEFT
+            bounds[1] = (int)(top * SCREEN_H_RATIO); // TOP
+            bounds[2] = (int)(right * SCREEN_W_RATIO); // RIGHT
+            bounds[3] = (int)(bottom * SCREEN_H_RATIO); // BOTTOM
+
+            return bounds;
         }
+
 
         protected override void OnDraw (Canvas canvas)
         {
-            var paint = new Paint();
-
-            paint.SetARGB(250, 50, 125, 255);
-            paint.SetStyle(Paint.Style.Stroke);
-            paint.StrokeWidth = 5;
-
-            // TODO draw functions
+            int[] bounds = new int[4]; // Used to calculate object bounds.
+            RectF Temp = new RectF(); // Used to draw Rectangular objects.
+            Classes.Coordinate coord; // Used for defining coordinates.
+            var paint = new Paint(); // Paint tool.
+ 
             
-            RectF ovalTemp = new RectF(0, GAME_HEIGHT-(GAME_HEIGHT/8), GAME_WIDTH, GAME_HEIGHT);
-            ovalTemp = setShapeSize(ovalTemp);
-            canvas.DrawOval(ovalTemp,paint);
+            /*
+             * 
+             * DRAW STATIC GAME OBJECTS
+             * 
+             */
+            paint.SetStyle(Paint.Style.FillAndStroke); // Fill and Stroke
+            paint.SetARGB(250, 50, 125, 255); // STRANGE_BLUE
+            bounds = convertBounds(0, GAME_HEIGHT - (GAME_HEIGHT / 8), GAME_WIDTH - 5, GAME_HEIGHT);
+            Temp.Set(bounds[0], bounds[1], bounds[2], bounds[3]);
+            canvas.DrawRect(Temp, paint);
 
-            Classes.Coordinate temp = new Classes.Coordinate(GAME_WIDTH / 2, GAME_HEIGHT / 2);
-            paint.SetARGB(250, 255, 0, 0);
-            drawCircle(canvas, paint, 50, temp);
+
+            // Draw bottom oval.
+            paint.SetARGB(250, 0, 240, 255); // LIGHT_BLUE
+            bounds = convertBounds(0, GAME_HEIGHT - (GAME_HEIGHT / 8), GAME_WIDTH-5, GAME_HEIGHT);
+            Temp.Set(bounds[0], bounds[1], bounds[2], bounds[3]);
+            canvas.DrawOval(Temp,paint);
+
+
+
+
+            /*
+             * 
+             * DRAW GAME HEADERS
+             * 
+             */
+
+            // Draw header background
+            bounds = convertBounds(0, 0, GAME_WIDTH, GAME_HEIGHT / 12);
+            Temp.Set(bounds[0], bounds[1], bounds[2], bounds[3]);
+            paint.SetShader(new LinearGradient(bounds[0], bounds[1], bounds[2], bounds[3], Color.Argb(255, 0, 115, 255), Color.Argb(255, 0, 230, 255), Shader.TileMode.Repeat));
+            canvas.DrawRect(Temp, paint);
+
+            // Reset Paint for text fields.
+            paint.Set(new Paint());
+            paint.SetStyle(Paint.Style.FillAndStroke); // Stroke only
+            paint.StrokeWidth = 2 * SCREEN_RATIO; // Stroke size
+            paint.SetARGB(255, 0, 60, 140); // DARK_BLUE
+            paint.TextSize = GAME_TEXT_SIZE * SCREEN_H_RATIO; // Set Text size.
+            coord = ConvertCoordinate(new Classes.Coordinate(GAME_WIDTH / 100, GAME_TEXT_SIZE)); // LIVES coordinates
+            canvas.DrawText(LIVES_TEXT, coord.x, coord.y, paint);
+            
+            // DRAW LIVES
+            for (int i = 0; i < LIVES; i++)
+            {
+                coord = ConvertCoordinate(new Classes.Coordinate((LIVES_TEXT.Length * GAME_TEXT_SIZE / 2) + (heart.Width * i) / 3, GAME_TEXT_SIZE / 5)); // LIVES coordinates
+                canvas.DrawBitmap(heart, coord.x, coord.y, paint);
+            }
+                
+
+            coord = ConvertCoordinate(new Classes.Coordinate(GAME_WIDTH / 2, GAME_TEXT_SIZE)); // HIGH_SCORE coordinates
+            canvas.DrawText(HIGH_SCORE_TEXT + HIGH_SCORE.ToString(), coord.x, coord.y, paint);
+
+            /*
+            bounds = convertBounds(0, 0, GAME_HEIGHT / 8, GAME_WIDTH);
+            Drawable topBar = mContext.GetDrawable(Resource.Drawable.TopBar);
+            setConvertedBounds(topBar, bounds[0], bounds[1], bounds[2], bounds[3]);
+            topBar.Draw(canvas);
+            */
 
         }
     }

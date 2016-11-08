@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:id="@+id/LOGO"
-            android:src="@drawable/Clipboard01" />
+            android:src="@drawable/Title" />
         <Button
             android:layout_width="match_parent"
             android:layout_height="50dp"

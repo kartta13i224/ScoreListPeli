@@ -2122,19 +2122,19 @@ namespace ScoreListPeli
 			public const int abc_vector_test = 2130837586;
 			
 			// aapt resource value: 0x7f020053
-			public const int Clipboard01 = 2130837587;
+			public const int design_fab_background = 2130837587;
 			
 			// aapt resource value: 0x7f020054
-			public const int design_fab_background = 2130837588;
+			public const int design_ic_visibility = 2130837588;
 			
 			// aapt resource value: 0x7f020055
-			public const int design_ic_visibility = 2130837589;
+			public const int design_snackbar_background = 2130837589;
 			
 			// aapt resource value: 0x7f020056
-			public const int design_snackbar_background = 2130837590;
+			public const int GET = 2130837590;
 			
 			// aapt resource value: 0x7f020057
-			public const int GET = 2130837591;
+			public const int Hart = 2130837591;
 			
 			// aapt resource value: 0x7f020058
 			public const int HighScores_Title = 2130837592;
@@ -2631,14 +2631,17 @@ namespace ScoreListPeli
 			// aapt resource value: 0x7f0200fc
 			public const int navigation_empty_icon = 2130837756;
 			
-			// aapt resource value: 0x7f0200ff
-			public const int notification_template_icon_bg = 2130837759;
+			// aapt resource value: 0x7f020100
+			public const int notification_template_icon_bg = 2130837760;
 			
 			// aapt resource value: 0x7f0200fd
 			public const int rainbow_texture679532534 = 2130837757;
 			
 			// aapt resource value: 0x7f0200fe
 			public const int score_click = 2130837758;
+			
+			// aapt resource value: 0x7f0200ff
+			public const int Title = 2130837759;
 			
 			static Drawable()
 			{

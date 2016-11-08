@@ -30,8 +30,8 @@ namespace ScoreListPeli
             height = Intent.GetIntExtra("DevHeight", height);
             width = Intent.GetIntExtra("DevWidth", width);
 
-            Console.Out.WriteLine("Device Height" + height);
-            Console.Out.WriteLine("Device Width" + width);
+            // Console.Out.WriteLine("Device Height" + height);
+            // Console.Out.WriteLine("Device Width" + width);
 
             // Set our view from the "main" layout resource
             // Setup the drawer.

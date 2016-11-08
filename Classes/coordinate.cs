@@ -17,7 +17,7 @@ namespace ScoreListPeli.Classes
         public float x { get; set; }
         public float y { get; set; }
 
-        public Coordinate(int Tx, int Ty)
+        public Coordinate(float Tx, float Ty)
         {
             x = Tx;
             y = Ty;

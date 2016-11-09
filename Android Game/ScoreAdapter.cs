@@ -36,8 +36,8 @@ namespace ScoreListPeli
             TextView nick = (TextView)vi.FindViewById(Resource.Id.nick);
             TextView points = (TextView)vi.FindViewById(Resource.Id.points);
 
-            nick.Text = data[position].nick;
-            points.Text = data[position].points.ToString();
+            nick.Text = data[position].Name;
+            points.Text = data[position].Score.ToString();
 
             return vi;
         }

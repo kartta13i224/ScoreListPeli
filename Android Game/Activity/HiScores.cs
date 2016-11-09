@@ -42,8 +42,6 @@ namespace ScoreListPeli
         private async void webHighScore()
         {
             ParseScoreList(await webScoreTool.getHighScores());
-
-            //// webScoreTool.write();
         }
 
         private void ParseScoreList(string ScoreJSON)
@@ -53,10 +51,11 @@ namespace ScoreListPeli
            
             // TODO DATA LISTVIEWII TÄÄL
             // Check that ScoreList is available.
+            ScoreJSON = ScoreJSON.Substring(1);
             if (ScoreJSON != null)
             {
                 // LINK DATA; DESERIALIZE
-                HiScoreObj obj = JsonConvert.DeserializeObject<HiScoreObj> (ScoreJSON);
+                HiScoreObj obj = JsonConvert.DeserializeObject<HiScoreObj>(ScoreJSON) ;
                 //Android.Widget.Toast.MakeText(this, "Data haettu!", Android.Widget.ToastLength.Short).Show();
                 
                 scoreList.Clear(); // Remove old entries from the hiscore list.
@@ -64,7 +63,7 @@ namespace ScoreListPeli
                 {
                     foreach (var ScoreObj in obj.HiScores)
                     {
-                        HiScoreObj.ScoreObj temp = new HiScoreObj.ScoreObj(ScoreObj.nick, ScoreObj.points);
+                        HiScoreObj.ScoreObj temp = new HiScoreObj.ScoreObj(ScoreObj.Name, ScoreObj.Score);
                         scoreList.Add(temp);
                     }
                 }

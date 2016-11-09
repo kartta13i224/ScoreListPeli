@@ -1,10 +1,4 @@
 using System;
-using Android.App;
-using Android.Content;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Android.OS;
 using System.Net;
 using System.IO;
 using System.Threading.Tasks;
@@ -17,8 +11,10 @@ namespace ScoreListPeli
     public class WebScoreTool
     {
         // URL where to get data from.
-        private const string URL = "http://home.tamk.fi/~e5tjokin/scorelist/HiScores.json";
-
+        private const string URL_BASE = "http://home.tamk.fi/~e5tjokin/HighScorePeli/index.php";
+        private const string GET_POST = "/highscores";
+        private const string GET_9 = "/gettop9";
+        private const string JSON_GET = "http://home.tamk.fi/~e5tjokin/HighScorePeli/HiScores.json";
 
         // Constructor
         public WebScoreTool()
@@ -26,7 +22,8 @@ namespace ScoreListPeli
 
         public async Task<string> getHighScores()
         {
-            string ScoreJSON = await FetchScoreList(URL);
+            // URL_BASE + GET_POST
+            string ScoreJSON = await FetchScoreList(URL_BASE + GET_POST);
             // Call function to parse it if not null.
             if (ScoreJSON != null && ScoreJSON.Length > 1)
                 return ScoreJSON;
@@ -38,32 +35,29 @@ namespace ScoreListPeli
             }
         }
 
-        public void write()
+        public void write(HiScoreObj.ScoreObj score)
         {
             try
             {
-                List<HiScoreObj.ScoreObj> scoreList = new List<HiScoreObj.ScoreObj>();
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create(URL);
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(URL_BASE + GET_POST);
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
 
                 using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                 {
-                    scoreList.Add(new HiScoreObj.ScoreObj("paras", 100));
-                    scoreList.Add(new HiScoreObj.ScoreObj("huono", 5));
-                    scoreList.Add(new HiScoreObj.ScoreObj("toinen", 95));
-
-                    string ScoresAsJson = JsonConvert.SerializeObject(scoreList);
+                    string ScoresAsJson = JsonConvert.SerializeObject(score);
                     streamWriter.Write(ScoresAsJson);
+
                     streamWriter.Flush();
                     streamWriter.Close();
                 }
-
+                /*
                 var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
                     var result = streamReader.ReadToEnd();
                 }
+                */
             }
             catch (Exception e)
             {
@@ -71,11 +65,11 @@ namespace ScoreListPeli
             }
         }
 
-        protected async Task<string> FetchScoreList(string URL)
+        protected async Task<string> FetchScoreList(string url)
         {
 
             // Create an HTTP web request using the URL:
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(URL));
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(url));
             request.ContentType = "application/json";
             request.Method = "GET";
 

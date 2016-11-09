@@ -19,13 +19,13 @@ namespace ScoreListPeli
 
         public class ScoreObj
         {
-            public string nick { get; set; }
-            public int points { get; set; }
+            public string Name { get; set; }
+            public int Score { get; set; }
 
             public ScoreObj(string n, int p)
             {
-                nick = n;
-                points = p;
+                Name = n;
+                Score = p;
             }
         }
 

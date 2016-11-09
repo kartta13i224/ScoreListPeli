@@ -20,10 +20,10 @@ namespace ScoreListPeli
     {
         
         // A fixed numbers for resizing components for the device's screen.
-        private static int GAME_WIDTH = 400;
-        private static int GAME_HEIGHT = 800;
-        private static int GAME_RATIO = GAME_HEIGHT / GAME_WIDTH;
-        private static int GAME_TEXT_SIZE = GAME_WIDTH / 10;
+        private static readonly int GAME_WIDTH = 400;
+        private static readonly int GAME_HEIGHT = 800;
+        private static readonly int GAME_RATIO = GAME_HEIGHT / GAME_WIDTH;
+        private static readonly int GAME_TEXT_SIZE = GAME_WIDTH / 10;
 
         // Multipliers to resize the components.
         private float SCREEN_W_RATIO = 1;
@@ -39,6 +39,7 @@ namespace ScoreListPeli
         private int HIGH_SCORE = 0;
 
         private Bitmap heart;
+        private static readonly int HEART_ICON_SPACE = 5;
 
 
         public ObjDrawer(Android.Content.Context context, int wDP, int hDP) :
@@ -156,7 +157,9 @@ namespace ScoreListPeli
             // DRAW LIVES
             for (int i = 0; i < LIVES; i++)
             {
-                coord = ConvertCoordinate(new Classes.Coordinate((LIVES_TEXT.Length * GAME_TEXT_SIZE / 2) + (heart.Width * i) / 3, GAME_TEXT_SIZE / 5)); // LIVES coordinates
+                                                                   // coord (x, y)
+                coord = ConvertCoordinate(new Classes.Coordinate((LIVES_TEXT.Length * GAME_TEXT_SIZE / 2) + HEART_ICON_SPACE * i, GAME_TEXT_SIZE / 3.5f)); // LIVES coordinates
+                coord.x = coord.x + (heart.Width * i);
                 canvas.DrawBitmap(heart, coord.x, coord.y, paint);
             }
                 

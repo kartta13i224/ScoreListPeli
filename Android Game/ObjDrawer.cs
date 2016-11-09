@@ -39,8 +39,12 @@ namespace ScoreListPeli
         private int HIGH_SCORE = 0;
 
         private Bitmap heart;
+        //private Bitmap Explosion;
+        //private Bitmap BlueSuck;
         private static readonly int HEART_ICON_SPACE = 5;
 
+        private ImageView test;
+        private AnimationDrawable BlueSuck;
 
         public ObjDrawer(Android.Content.Context context, int wDP, int hDP) :
             base(context)
@@ -49,6 +53,9 @@ namespace ScoreListPeli
             SetBackgroundResource(Resource.Drawable.rainbow_texture679532534);
             w_PX = wDP;
             h_PX = hDP;
+
+            test = new ImageView(context);
+            
             Initialize();
         }
 
@@ -61,6 +68,34 @@ namespace ScoreListPeli
             Android.Content.Res.Resources res = Resources;
             heart = BitmapFactory.DecodeResource(res, Resource.Drawable.Hart);
             heart = ScaleBitmap(heart, 30, 30);
+
+            
+            BlueSuck = new AnimationDrawable();
+            BlueSuck.OneShot = false;
+
+
+
+            List<Drawable> spinningFrames = new List<Drawable>();
+            spinningFrames.Add(Resources.GetDrawable(Resource.Drawable.spinningbylayer00));
+            spinningFrames.Add(Resources.GetDrawable(Resource.Drawable.spinningbylayer01));
+            spinningFrames.Add(Resources.GetDrawable(Resource.Drawable.spinningbylayer02));
+            spinningFrames.Add(Resources.GetDrawable(Resource.Drawable.spinningbylayer03));
+            spinningFrames.Add(Resources.GetDrawable(Resource.Drawable.spinningbylayer04));
+            spinningFrames.Add(Resources.GetDrawable(Resource.Drawable.spinningbylayer05));
+            spinningFrames.Add(Resources.GetDrawable(Resource.Drawable.spinningbylayer06));
+            spinningFrames.Add(Resources.GetDrawable(Resource.Drawable.spinningbylayer07));
+            spinningFrames.Add(Resources.GetDrawable(Resource.Drawable.spinningbylayer08));
+            spinningFrames.Add(Resources.GetDrawable(Resource.Drawable.spinningbylayer09));
+            spinningFrames.Add(Resources.GetDrawable(Resource.Drawable.spinningbylayer10));
+            spinningFrames.Add(Resources.GetDrawable(Resource.Drawable.spinningbylayer11));
+            foreach (Drawable frame in spinningFrames)
+            {
+                ScaleDrawable scaledFrame = new ScaleDrawable(frame, GravityFlags.Left, 30 * SCREEN_W_RATIO, 30 * SCREEN_H_RATIO);
+                BlueSuck.AddFrame(scaledFrame, 50);
+            }
+
+            test.SetImageDrawable(BlueSuck);
+
         }
 
 
@@ -81,6 +116,9 @@ namespace ScoreListPeli
             temp.Recycle();
             return resizedBitmap;
         }
+
+
+
 
         // Converts Coordinates for display screen size.
         private Classes.Coordinate ConvertCoordinate(Classes.Coordinate input)
@@ -106,12 +144,23 @@ namespace ScoreListPeli
 
         protected override void OnDraw (Canvas canvas)
         {
+
             int[] bounds = new int[4]; // Used to calculate object bounds.
             RectF Temp = new RectF(); // Used to draw Rectangular objects.
             Classes.Coordinate coord; // Used for defining coordinates.
             var paint = new Paint(); // Paint tool.
- 
-            
+
+            coord = ConvertCoordinate(new Classes.Coordinate(GAME_WIDTH / 2, GAME_HEIGHT / 2));
+            test.SetX(coord.x);
+            test.SetY(coord.y);
+            test.Visibility = ViewStates.Visible;
+            test.SetImageBitmap(BitmapFactory.DecodeResource(Resources, Resource.Drawable.Hart));
+            test.SetBackgroundResource(Resource.Drawable.Hart);
+            test.SetImageResource(Resource.Drawable.Icon);
+            test.Draw(canvas);
+            BlueSuck.Draw(canvas);
+            //BlueSuck.Run();
+            BlueSuck.Start();
             /*
              * 
              * DRAW STATIC GAME OBJECTS

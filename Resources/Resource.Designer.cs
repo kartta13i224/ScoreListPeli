@@ -2631,8 +2631,8 @@ namespace ScoreListPeli
 			// aapt resource value: 0x7f0200fc
 			public const int navigation_empty_icon = 2130837756;
 			
-			// aapt resource value: 0x7f020100
-			public const int notification_template_icon_bg = 2130837760;
+			// aapt resource value: 0x7f02010c
+			public const int notification_template_icon_bg = 2130837772;
 			
 			// aapt resource value: 0x7f0200fd
 			public const int rainbow_texture679532534 = 2130837757;
@@ -2641,7 +2641,43 @@ namespace ScoreListPeli
 			public const int score_click = 2130837758;
 			
 			// aapt resource value: 0x7f0200ff
-			public const int Title = 2130837759;
+			public const int spinningbylayer00 = 2130837759;
+			
+			// aapt resource value: 0x7f020100
+			public const int spinningbylayer01 = 2130837760;
+			
+			// aapt resource value: 0x7f020101
+			public const int spinningbylayer02 = 2130837761;
+			
+			// aapt resource value: 0x7f020102
+			public const int spinningbylayer03 = 2130837762;
+			
+			// aapt resource value: 0x7f020103
+			public const int spinningbylayer04 = 2130837763;
+			
+			// aapt resource value: 0x7f020104
+			public const int spinningbylayer05 = 2130837764;
+			
+			// aapt resource value: 0x7f020105
+			public const int spinningbylayer06 = 2130837765;
+			
+			// aapt resource value: 0x7f020106
+			public const int spinningbylayer07 = 2130837766;
+			
+			// aapt resource value: 0x7f020107
+			public const int spinningbylayer08 = 2130837767;
+			
+			// aapt resource value: 0x7f020108
+			public const int spinningbylayer09 = 2130837768;
+			
+			// aapt resource value: 0x7f020109
+			public const int spinningbylayer10 = 2130837769;
+			
+			// aapt resource value: 0x7f02010a
+			public const int spinningbylayer11 = 2130837770;
+			
+			// aapt resource value: 0x7f02010b
+			public const int Title = 2130837771;
 			
 			static Drawable()
 			{

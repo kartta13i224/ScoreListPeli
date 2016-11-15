@@ -1,0 +1,18 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+	android:oneshot="false">
+	<!-- oneshot true = only do once
+	one shot false = repeat -->
+    <item android:drawable="@drawable/spinningbylayer00" android:duration="50" />
+	<item android:drawable="@drawable/spinningbylayer01" android:duration="50" />
+	<item android:drawable="@drawable/spinningbylayer02" android:duration="50" />
+	<item android:drawable="@drawable/spinningbylayer03" android:duration="50" />
+	<item android:drawable="@drawable/spinningbylayer04" android:duration="50" />
+	<item android:drawable="@drawable/spinningbylayer05" android:duration="50" />
+	<item android:drawable="@drawable/spinningbylayer06" android:duration="50" />
+	<item android:drawable="@drawable/spinningbylayer07" android:duration="50" />
+	<item android:drawable="@drawable/spinningbylayer08" android:duration="50" />
+	<item android:drawable="@drawable/spinningbylayer09" android:duration="50" />
+	<item android:drawable="@drawable/spinningbylayer10" android:duration="50" />
+	<item android:drawable="@drawable/spinningbylayer11" android:duration="50" />
+
+</animation-list>

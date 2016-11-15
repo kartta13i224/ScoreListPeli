@@ -153,14 +153,18 @@ namespace ScoreListPeli
             coord = ConvertCoordinate(new Classes.Coordinate(GAME_WIDTH / 2, GAME_HEIGHT / 2));
             test.SetX(coord.x);
             test.SetY(coord.y);
-            test.Visibility = ViewStates.Visible;
-            test.SetImageBitmap(BitmapFactory.DecodeResource(Resources, Resource.Drawable.Hart));
-            test.SetBackgroundResource(Resource.Drawable.Hart);
-            test.SetImageResource(Resource.Drawable.Icon);
+
+            test.SetImageDrawable(BlueSuck);
+
+            bounds = convertBounds(0, 0, GAME_WIDTH, GAME_HEIGHT);
+            test.Layout(bounds[0], bounds[1], bounds[2], bounds[3]);
+
             test.Draw(canvas);
+            test.SetBackgroundDrawable(Resources.GetDrawable(Resource.Drawable.SpinningThing));
             BlueSuck.Draw(canvas);
-            //BlueSuck.Run();
             BlueSuck.Start();
+
+
             /*
              * 
              * DRAW STATIC GAME OBJECTS

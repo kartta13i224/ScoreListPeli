@@ -2631,8 +2631,8 @@ namespace ScoreListPeli
 			// aapt resource value: 0x7f0200fc
 			public const int navigation_empty_icon = 2130837756;
 			
-			// aapt resource value: 0x7f02010c
-			public const int notification_template_icon_bg = 2130837772;
+			// aapt resource value: 0x7f02010d
+			public const int notification_template_icon_bg = 2130837773;
 			
 			// aapt resource value: 0x7f0200fd
 			public const int rainbow_texture679532534 = 2130837757;
@@ -2677,7 +2677,10 @@ namespace ScoreListPeli
 			public const int spinningbylayer11 = 2130837770;
 			
 			// aapt resource value: 0x7f02010b
-			public const int Title = 2130837771;
+			public const int SpinningThing = 2130837771;
+			
+			// aapt resource value: 0x7f02010c
+			public const int Title = 2130837772;
 			
 			static Drawable()
 			{

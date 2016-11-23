@@ -3,6 +3,7 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Widget;
+using ScoreListPeli.Classes;
 
 namespace ScoreListPeli
 {
@@ -52,11 +53,8 @@ namespace ScoreListPeli
             Rate = FindViewById<Button>(Resource.Id.BTN_Rate);
 
             StartGame.Click += delegate {
-                // TODO open new game activity
                 Console.Out.WriteLine(LOG_TAG + " New game button pressed!");
                 var GameActivity = new Intent(this, typeof(GameScreen));
-                GameActivity.PutExtra("DevHeight", h_px);
-                GameActivity.PutExtra("DevWidth", w_px);
                 StartActivity(GameActivity);
             };
 
@@ -71,6 +69,10 @@ namespace ScoreListPeli
                 // TODO Rate application
                 Console.Out.WriteLine(LOG_TAG + " Rate button pressed!");
             };
+
+
+            // Initialize game screen; Sends pixel width and pixel height.
+            ScreenUtils.screenInitialization(w_px, h_px);
         }
 
         private float ConvertPixelsToDp(float pixelValue)

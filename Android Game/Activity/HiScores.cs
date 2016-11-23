@@ -50,10 +50,10 @@ namespace ScoreListPeli
 
            
             // TODO DATA LISTVIEWII TÄÄL
-            // Check that ScoreList is available.
-            ScoreJSON = ScoreJSON.Substring(1);
+            // Check that ScoreList is available.      
             if (ScoreJSON != null)
             {
+                ScoreJSON = ScoreJSON.Substring(1);
                 // LINK DATA; DESERIALIZE
                 HiScoreObj obj = JsonConvert.DeserializeObject<HiScoreObj>(ScoreJSON) ;
                 //Android.Widget.Toast.MakeText(this, "Data haettu!", Android.Widget.ToastLength.Short).Show();
@@ -68,9 +68,6 @@ namespace ScoreListPeli
                     }
                 }
 
-                else
-                    Android.Widget.Toast.MakeText(this, "Check your internet connection!", Android.Widget.ToastLength.Short).Show();
-
                 if (scoreList != null)
                 {
                     // Android.Widget.Toast.MakeText(this, obj.ToString(), Android.Widget.ToastLength.Short).Show();
@@ -78,6 +75,9 @@ namespace ScoreListPeli
                 }
 
             }
+
+            else
+                Toast.MakeText(this, "Check your internet connection!", ToastLength.Short).Show();
 
         }
 

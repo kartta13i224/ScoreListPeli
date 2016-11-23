@@ -13,28 +13,66 @@ using Android.Widget;
 using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.Graphics.Drawables.Shapes;
+using System.Timers;
 
 namespace ScoreListPeli.Classes
 {
     class FallObject_normal : View
     {
-        private readonly ShapeDrawable _shape;
-        public FallObject_normal(Context context) : base(context) {
+        public Coordinate Coordinates { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public int FallingSpeed { get; set; }
 
-            var paint = new Paint();
-            paint.SetARGB(255, 200, 255, 0);
-            paint.SetStyle(Paint.Style.Stroke);
-            paint.StrokeWidth = 4;
+        private ImageView frames;
+        private AnimationDrawable animation;
 
-            _shape = new ShapeDrawable(new RectShape());
-            _shape.Paint.Set(paint);
+        public FallObject_normal(Context c, float x, float y)
+            : base(c)
+        {
+            frames = new ImageView(c);
+            frames.SetBackgroundDrawable(c.Resources.GetDrawable(Resource.Drawable.SpinningThing));
+            Width = 79;
+            Height = 79;
+            animation = (AnimationDrawable)frames.Background;
+            animation.OneShot = false;
 
-            _shape.SetBounds(20, 20, 300, 200);
+            frames.Layout(0, 0, (int)(Width*ScreenUtils.SCREEN_W_RATIO), (int)(Height * ScreenUtils.SCREEN_W_RATIO));
+
+            Coordinates = new Coordinate(x, y);
+            FallingSpeed = 1;
+        }
+
+        public void start()
+        {
+            animation.Start();
+
+            double interval = 1000 / FallingSpeed;
+            Timer timer = new Timer()
+            {
+                AutoReset = true,
+                Interval = interval
+            };
+            timer.Elapsed += Fall;
+            timer.Start();
+        }
+
+        // Changes the location of this view.
+        public void changeViewTest(float x, float y)
+        {
+            this.Animate().X(x).Y(y).SetDuration(0).Start();
+        }
+
+        // Drops view
+        private void Fall(object sender, ElapsedEventArgs e)
+        {
+            Coordinates.y = Coordinates.y + 1;
         }
 
         protected override void OnDraw(Canvas canvas)
         {
-            _shape.Draw(canvas);
+            frames.Draw(canvas);
+            start(); // Starts animation + falling
         }
     }
 }

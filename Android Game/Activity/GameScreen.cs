@@ -9,6 +9,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using System.Timers;
 
 namespace ScoreListPeli
 {
@@ -18,26 +19,36 @@ namespace ScoreListPeli
         private static string LOG_TAG = "GameScreen_Activity"; // Activity log tag.
 
         protected ObjDrawer mObjDrawer;
-        private int width = 0;
-        private int height = 0;
 
-		protected override void OnCreate(Bundle savedInstanceState)
-		{
+        protected override void OnCreate(Bundle savedInstanceState)
+        {
             Console.Out.WriteLine(LOG_TAG + " in onCreate");
-			base.OnCreate(savedInstanceState);
-
-            // Get device pixel height and width.
-            height = Intent.GetIntExtra("DevHeight", height);
-            width = Intent.GetIntExtra("DevWidth", width);
-
-            // Console.Out.WriteLine("Device Height" + height);
-            // Console.Out.WriteLine("Device Width" + width);
+            base.OnCreate(savedInstanceState);
 
             // Set our view from the "main" layout resource
             // Setup the drawer.
-            mObjDrawer = new ObjDrawer(this, width, height);
+            mObjDrawer = new ObjDrawer(this);
             SetContentView(mObjDrawer);
+
+            
+            mObjDrawer.SetWillNotDraw(false);
+
+            Timer timer = new Timer()
+            {
+                AutoReset = true,
+                Interval = TimeSpan.FromMilliseconds(100).Milliseconds
+            };
+            timer.Elapsed += reDraw1;
+            timer.Start();
+            
         }
+
+        
+        private void reDraw1(object sender, ElapsedEventArgs e)
+        {
+            mObjDrawer.PostInvalidate();
+        }
+        
 
         public void reDraw(View v)
         {
@@ -61,9 +72,7 @@ namespace ScoreListPeli
 
             // TODO implement user health.
 
-            // TODO show user health.
 
-            // TODO show user highscore.
             if (e.Action == MotionEventActions.Down)
             {
                 // User pressed the screen.
@@ -80,6 +89,8 @@ namespace ScoreListPeli
                 Console.Out.Write(x);
                 Console.Out.Write(" Y:");
                 Console.Out.WriteLine(y);
+
+
             }
 
             reDraw(CurrentFocus);

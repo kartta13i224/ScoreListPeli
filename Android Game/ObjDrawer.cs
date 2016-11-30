@@ -15,6 +15,7 @@ namespace ScoreListPeli
 
         private Context mContext;
 
+
         private Bitmap heart;
         private static readonly int HEART_ICON_SPACE = 5;
 
@@ -27,7 +28,6 @@ namespace ScoreListPeli
             mContext = context;
             SetBackgroundResource(Resource.Drawable.rainbow_texture679532534);
 
-
             //test = new ImageView(context);
 
             Initialize();
@@ -35,17 +35,17 @@ namespace ScoreListPeli
 
         private void Initialize()
         {
-
             Android.Content.Res.Resources res = Resources;
             heart = BitmapFactory.DecodeResource(res, Resource.Drawable.Hart);
             heart = ScreenUtils.ScaleBitmap(heart, 30, 30);
+
+            
 
             FallingObjects = new List<FallObject_normal>();
             testObject = new FallObject_normal(mContext, ScreenUtils.GAME_WIDTH / 2, ScreenUtils.GAME_HEIGHT / 2);
         }
 
-
-
+        
 
         protected override void OnDraw(Canvas canvas)
         {
@@ -94,7 +94,7 @@ namespace ScoreListPeli
             canvas.DrawOval(Temp, paint);
 
 
-
+            
 
             /*
              * 

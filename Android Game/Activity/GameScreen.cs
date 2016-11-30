@@ -30,7 +30,6 @@ namespace ScoreListPeli
             mObjDrawer = new ObjDrawer(this);
             SetContentView(mObjDrawer);
 
-            
             mObjDrawer.SetWillNotDraw(false);
 
             Timer timer = new Timer()

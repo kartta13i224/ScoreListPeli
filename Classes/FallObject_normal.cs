@@ -17,15 +17,15 @@ using System.Timers;
 
 namespace ScoreListPeli.Classes
 {
-    class FallObject_normal : View
+    class FallObject_normal : ImageView
     {
         public Coordinate Coordinates { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
+        new public int Width { get; set; }
+        new public int Height { get; set; }
         public int FallingSpeed { get; set; }
-
+        
         private ImageView frames;
-        private AnimationDrawable animation;
+        public AnimationDrawable animation;
 
         public FallObject_normal(Context c, float x, float y)
             : base(c)

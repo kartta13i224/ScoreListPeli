@@ -24,20 +24,18 @@ namespace ScoreListPeli.Classes
         new public int Height { get; set; }
         public int FallingSpeed { get; set; }
         
-        private ImageView frames;
         public AnimationDrawable animation;
 
         public FallObject_normal(Context c, float x, float y)
             : base(c)
         {
-            frames = new ImageView(c);
-            frames.SetBackgroundDrawable(c.Resources.GetDrawable(Resource.Drawable.SpinningThing));
+            this.SetBackgroundDrawable(c.Resources.GetDrawable(Resource.Drawable.SpinningThing));
             Width = 79;
             Height = 79;
-            animation = (AnimationDrawable)frames.Background;
+            animation = (AnimationDrawable)this.Background;
             animation.OneShot = false;
 
-            frames.Layout(0, 0, (int)(Width*ScreenUtils.SCREEN_W_RATIO), (int)(Height * ScreenUtils.SCREEN_W_RATIO));
+            this.Layout(0, 0, (int)(Width*ScreenUtils.SCREEN_W_RATIO), (int)(Height * ScreenUtils.SCREEN_W_RATIO));
 
             Coordinates = new Coordinate(x, y);
             FallingSpeed = 1;
@@ -71,7 +69,7 @@ namespace ScoreListPeli.Classes
 
         protected override void OnDraw(Canvas canvas)
         {
-            frames.Draw(canvas);
+            this.Draw(canvas);
             start(); // Starts animation + falling
         }
     }

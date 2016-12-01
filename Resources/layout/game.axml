@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="25px"
+    android:minHeight="25px"
+    android:background="@drawable/rainbow_texture679532534"
+    android:id="@+id/myDrawing">
+    <ImageView
+        android:src="@drawable/spinningbylayer04"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView8" />
+    <ImageView
+        android:src="@drawable/spinningbylayer04"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView7" />
+    <ImageView
+        android:src="@drawable/spinningbylayer03"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView6" />
+    <ImageView
+        android:src="@drawable/spinningbylayer02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView5" />
+    <ImageView
+        android:src="@drawable/spinningbylayer02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView4" />
+    <ImageView
+        android:src="@drawable/spinningbylayer01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView3" />
+    <ImageView
+        android:src="@drawable/spinningbylayer00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView2" />
+    <ImageView
+        android:src="@drawable/spinningbylayer00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView1" />
+</RelativeLayout>

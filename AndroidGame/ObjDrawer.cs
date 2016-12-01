@@ -26,7 +26,7 @@ namespace ScoreListPeli
             base(context)
         {
             mContext = context;
-            SetBackgroundResource(Resource.Drawable.rainbow_texture679532534);
+            //SetBackgroundResource(Resource.Drawable.rainbow_texture679532534);
 
             //test = new ImageView(context);
 
@@ -69,11 +69,12 @@ namespace ScoreListPeli
             testObject.changeViewTest(this, bounds[0], bounds[1]);
             testObject.draw(canvas);
             testObject.start();
-            */
+            
 
             bounds = ScreenUtils.convertBounds(testObject.Coordinates.x, testObject.Coordinates.y);
             testObject.changeViewTest(bounds[0], bounds[1]);
             testObject.Draw(canvas);
+            */
 
             /*
              * 

@@ -45,25 +45,28 @@
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Android Game\Activity\GameScreen.cs" />
+    <Compile Include="AndroidGame\Activity\GameScreen.cs" />
     <Compile Include="Classes\Coordinate.cs" />
     <Compile Include="Classes\DrawObject.cs" />
     <Compile Include="Classes\FallObject_normal.cs" />
     <Compile Include="Classes\HiScoreObj.cs" />
-    <Compile Include="Android Game\Activity\HiScores.cs" />
-    <Compile Include="Android Game\Activity\MainMenu.cs" />
-    <Compile Include="Android Game\ObjDrawer.cs" />
+    <Compile Include="AndroidGame\Activity\HiScores.cs" />
+    <Compile Include="AndroidGame\Activity\MainMenu.cs" />
+    <Compile Include="AndroidGame\ObjDrawer.cs" />
     <Compile Include="Classes\LayeredImageView.cs" />
     <Compile Include="Classes\ScreenUtils.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Android Game\ScoreAdapter.cs" />
+    <Compile Include="AndroidGame\ScoreAdapter.cs" />
     <Compile Include="WebScoreTool.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <AndroidResource Include="Resources\layout\game.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
     <None Include="GettingStarted.Xamarin" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />

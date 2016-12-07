@@ -47,13 +47,13 @@
   <ItemGroup>
     <Compile Include="AndroidGame\Activity\GameScreen.cs" />
     <Compile Include="Classes\Coordinate.cs" />
-    <Compile Include="Classes\DrawObject.cs" />
     <Compile Include="Classes\FallObject_normal.cs" />
     <Compile Include="Classes\HiScoreObj.cs" />
     <Compile Include="AndroidGame\Activity\HiScores.cs" />
     <Compile Include="AndroidGame\Activity\MainMenu.cs" />
     <Compile Include="AndroidGame\ObjDrawer.cs" />
     <Compile Include="Classes\LayeredImageView.cs" />
+    <Compile Include="Classes\ObjectBounds.cs" />
     <Compile Include="Classes\ScreenUtils.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

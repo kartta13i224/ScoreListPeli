@@ -1,18 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 
 using Android.Graphics;
 using Android.Graphics.Drawables;
-using Android.Graphics.Drawables.Shapes;
 using System.Timers;
 
 namespace ScoreListPeli.Classes
@@ -29,15 +19,16 @@ namespace ScoreListPeli.Classes
         public FallObject_normal(Context c, float x, float y)
             : base(c)
         {
-            this.SetBackgroundDrawable(c.Resources.GetDrawable(Resource.Drawable.SpinningThing));
             Width = 79;
             Height = 79;
-            animation = (AnimationDrawable)this.Background;
+
+            animation = (AnimationDrawable)c.Resources.GetDrawable(Resource.Drawable.SpinningThing);
+            ScreenUtils.ScaleAnimation(ref animation, (int)(Width * ScreenUtils.SCREEN_W_RATIO), (int)(Height * ScreenUtils.SCREEN_H_RATIO));
+            SetBackgroundDrawable(animation);          
+
             animation.OneShot = false;
-
-            this.Layout(0, 0, (int)(Width*ScreenUtils.SCREEN_W_RATIO), (int)(Height * ScreenUtils.SCREEN_W_RATIO));
-
-            Coordinates = new Coordinate(x, y);
+            
+            Coordinates = ScreenUtils.ConvertCoordinate(new Coordinate(x, y));
             FallingSpeed = 1;
         }
 
@@ -45,6 +36,7 @@ namespace ScoreListPeli.Classes
         {
             animation.Start();
 
+            /*
             double interval = 1000 / FallingSpeed;
             Timer timer = new Timer()
             {
@@ -53,23 +45,29 @@ namespace ScoreListPeli.Classes
             };
             timer.Elapsed += Fall;
             timer.Start();
+            */
         }
 
         // Changes the location of this view.
         public void changeViewTest(float x, float y)
         {
-            this.Animate().X(x).Y(y).SetDuration(0).Start();
+            //this.Animate().X(x).Y(y).SetDuration(0).Start();
         }
 
         // Drops view
         private void Fall(object sender, ElapsedEventArgs e)
         {
-            Coordinates.y = Coordinates.y + 1;
+            Height++;
+            Width++;
+            ScreenUtils.ScaleAnimation(ref animation, (int)(Width * ScreenUtils.SCREEN_W_RATIO), (int)(Height * ScreenUtils.SCREEN_H_RATIO));
+            SetBackgroundDrawable(animation);
+            //Coordinates.y = Coordinates.y + 1;
         }
 
         protected override void OnDraw(Canvas canvas)
         {
-            this.Draw(canvas);
+            base.OnDraw(canvas);
+
             start(); // Starts animation + falling
         }
     }

@@ -19,31 +19,20 @@ namespace ScoreListPeli
 
         protected ObjDrawer mObjDrawer;
 
+        RelativeLayout layout;
+
+        private List<Coordinate> slash;
+
+
+        /*
         List<ImageView> fruits;
-        List<Matrix> fruitMatrix;
+        List<FallObject_normal> fruits;
         List<AnimationDrawable> fruitAnimation;
 
-        protected override void OnCreate(Bundle savedInstanceState)
-        {
-            Console.Out.WriteLine(LOG_TAG + " in onCreate");
-            base.OnCreate(savedInstanceState);
+        AnimationDrawable SpinningThing;
 
-            SetContentView(Resource.Layout.game);
-
-            RelativeLayout layout = FindViewById<RelativeLayout>(Resource.Id.myDrawing);
-
-            mObjDrawer = new ObjDrawer(this);
-            layout.AddView(mObjDrawer, new ViewGroup.LayoutParams(
-                RelativeLayout.LayoutParams.MatchParent,
-                RelativeLayout.LayoutParams.MatchParent
-            ));
-
-            // Initialize imageViews.
-            fruits = new List<ImageView>();
-            fruitMatrix = new List<Matrix>();
-            fruitAnimation = new List<AnimationDrawable>();
-
-            Coordinate[] coordinates = new Coordinate[] {
+        // Create coordinates for dynamic ImageViews
+        Coordinate[] coordinates = new Coordinate[] {
                 new Coordinate((float)ScreenUtils.GAME_WIDTH / 8f, (float)ScreenUtils.GAME_HEIGHT / 8f), // ImageView 0
                 new Coordinate((float)ScreenUtils.GAME_WIDTH - ((float)ScreenUtils.GAME_WIDTH / 8f), (float)ScreenUtils.GAME_HEIGHT / 8f), // ImageView 1
                 new Coordinate((float)ScreenUtils.GAME_WIDTH / 2f, (float)ScreenUtils.GAME_HEIGHT / 8f * 2), // ImageView 2
@@ -53,48 +42,68 @@ namespace ScoreListPeli
                 new Coordinate((float)ScreenUtils.GAME_WIDTH / 8f, (float)ScreenUtils.GAME_HEIGHT - (float)ScreenUtils.GAME_HEIGHT / 8f), // ImageView 6
                 new Coordinate((float)ScreenUtils.GAME_WIDTH - ((float)ScreenUtils.GAME_WIDTH / 8f), (float)ScreenUtils.GAME_HEIGHT - (float)ScreenUtils.GAME_HEIGHT / 8f) // ImageView 7
             };
+            */
+        protected override void OnCreate(Bundle savedInstanceState)
+        {
+            Console.Out.WriteLine(LOG_TAG + " in onCreate");
+            base.OnCreate(savedInstanceState);
 
-            // Convert coordinates.
-            for (int i = 0; i < coordinates.Length; i++)
+            SetContentView(Resource.Layout.game);
+
+            layout = FindViewById<RelativeLayout>(Resource.Id.myDrawing);
+
+            mObjDrawer = new ObjDrawer(this);
+            layout.AddView(mObjDrawer, new ViewGroup.LayoutParams(
+                RelativeLayout.LayoutParams.MatchParent,
+                RelativeLayout.LayoutParams.MatchParent
+            ));
+
+            slash = new List<Coordinate>();
+
+            // Initialize lists for imageViews.
+            //fruits = new List<ImageView>();
+           // fruits = new List<FallObject_normal>();
+            //fruitAnimation = new List<AnimationDrawable>();
+
+            /*
+            SpinningThing = (AnimationDrawable)(Resources.GetDrawable(Resource.Drawable.SpinningThing));
+            ScreenUtils.ScaleAnimation(ref SpinningThing, (int)(79 * ScreenUtils.SCREEN_W_RATIO), (int)(79 * ScreenUtils.SCREEN_H_RATIO));
+            */
+
+            /*
+            for (int i = 0; i < 1; i++)
             {
+                // Convert coordinates.
                 coordinates[i] = ScreenUtils.ConvertCoordinate(coordinates[i]);
-            }
-            
 
-            fruits.Add(FindViewById<ImageView>(Resource.Id.imageView1));
-            fruits.Add(FindViewById<ImageView>(Resource.Id.imageView2));
-            fruits.Add(FindViewById<ImageView>(Resource.Id.imageView3));
-            fruits.Add(FindViewById<ImageView>(Resource.Id.imageView4));
-            fruits.Add(FindViewById<ImageView>(Resource.Id.imageView5));
-            fruits.Add(FindViewById<ImageView>(Resource.Id.imageView6));
-            fruits.Add(FindViewById<ImageView>(Resource.Id.imageView7));
-            fruits.Add(FindViewById<ImageView>(Resource.Id.imageView8));
-
-            
-            for (int i = 0; i < fruits.Capacity; i++)
-            {
-                // Create matrixes for each Fruit.
-                fruitMatrix.Add(new Matrix());
-                fruitMatrix[i].Reset();
-                
-                fruitMatrix[i].PostTranslate(coordinates[i].x, coordinates[i].y); // Set coordinates to matrix.
-
-                // Set matrix to specific fruit.
-                fruits[i].SetScaleType(ImageView.ScaleType.Matrix);
-                fruits[i].ImageMatrix = fruitMatrix[i];
-
-                //fruits[i].Layout((int)coordinates[i].x, (int)coordinates[i].y, (int)(coordinates[i].x + fruits[i].Width * ScreenUtils.SCREEN_W_RATIO), (int)(coordinates[i].y + fruits[i].Height * ScreenUtils.SCREEN_H_RATIO));
+                ImageView tempView = new ImageView(this);
 
                 // Set animations to fruits.
-                fruits[i].SetBackgroundDrawable(Resources.GetDrawable(Resource.Drawable.SpinningThing));
-                fruitAnimation.Add((AnimationDrawable)fruits[i].Background);
+                tempView.SetBackgroundDrawable(SpinningThing);
+                fruitAnimation.Add((AnimationDrawable)tempView.Background);                
                 fruitAnimation[i].OneShot = false;
+
+                // Set image scale.
+                RelativeLayout.LayoutParams tempParams = new RelativeLayout.LayoutParams(fruitAnimation[i].IntrinsicWidth, fruitAnimation[i].IntrinsicHeight);
+
+                // Set location via Parameter's margins.
+                tempParams.TopMargin = (int)coordinates[i].y;
+                tempParams.LeftMargin = (int)coordinates[i].x;
+
+                // Add it to fruits list.
+                fruits.Add(tempView);
+                layout.AddView(fruits[i], tempParams);              
             }
-            
+            */
+            /*
+            FallObject_normal tempObject = new FallObject_normal(this, ScreenUtils.GAME_WIDTH / 2, ScreenUtils.GAME_HEIGHT / 2);
+            RelativeLayout.LayoutParams tempParams = new RelativeLayout.LayoutParams(tempObject.Width, tempObject.Height);
 
+            tempParams.LeftMargin = (int)tempObject.Coordinates.x;
+            tempParams.TopMargin = (int)tempObject.Coordinates.y;
 
-            //ScreenUtils.SCREEN_H_RATIO;
-            //ScreenUtils.SCREEN_W_RATIO;
+            layout.AddView(tempObject, tempParams);
+            */
 
             /*
             // Setup the drawer.
@@ -102,26 +111,35 @@ namespace ScoreListPeli
             SetContentView(mObjDrawer);
 
             mObjDrawer.SetWillNotDraw(false);
+            */
 
+            
             Timer timer = new Timer()
             {
                 AutoReset = true,
                 Interval = TimeSpan.FromMilliseconds(100).Milliseconds
             };
-            timer.Elapsed += reDraw1;
+
+            timer.Elapsed += refreshObjects;
             timer.Start();
-            */
+            
         }
 
-        /*
-        private void reDraw1(object sender, ElapsedEventArgs e)
+        private void refreshObjects(object sender, ElapsedEventArgs e)
         {
+            if (mObjDrawer.LIVES <= 0)
+            {
+                Finish();
+            }
+
+            mObjDrawer.fallObject();
             mObjDrawer.PostInvalidate();
         }
-        */
+
 
         public void reDraw(View v)
         {
+            //mObjDrawer.fallObject();
             mObjDrawer.Invalidate();
         }
         
@@ -129,10 +147,7 @@ namespace ScoreListPeli
 
         public override bool OnTouchEvent(MotionEvent e)
         {
-            for (int i = 0; i < fruitAnimation.Capacity; i++)
-            {
-                fruitAnimation[i].Start();
-            }
+            //fruitAnimation[0].Start();
 
             float x = e.GetX();
             float y = e.GetY();
@@ -150,27 +165,37 @@ namespace ScoreListPeli
             // TODO implement user health.
 
 
-            if (e.Action == MotionEventActions.Down)
+            if (e.Action == MotionEventActions.Move)
             {
-                // User pressed the screen.
+                // User still presses the screen.
+                slash.Add(new Coordinate(x, y));
+                
+                /*
                 Console.Out.Write(" - Pointer location: X:");
                 Console.Out.Write(x);
                 Console.Out.Write(" Y:");
                 Console.Out.WriteLine(y);
-            }
+                */
 
+            }
+            else if (e.Action == MotionEventActions.Down)
+            {
+                // User pressed the screen.
+            }
             else if (e.Action == MotionEventActions.Up)
             {
                 // User released the finger.
+                /*     
                 Console.Out.Write(" - Pointer location: X:");
                 Console.Out.Write(x);
                 Console.Out.Write(" Y:");
                 Console.Out.WriteLine(y);
-
-
+                */
+                mObjDrawer.checkSlash(slash);
+                slash.Clear();
             }
 
-            reDraw(CurrentFocus);
+            //reDraw(CurrentFocus);
             return base.OnTouchEvent(e);
         }
     }

@@ -1,16 +1,7 @@
+using Android.Graphics;
+using Android.Graphics.Drawables;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Android.Graphics;
-
 namespace ScoreListPeli.Classes
 {
     public static class ScreenUtils
@@ -25,6 +16,7 @@ namespace ScoreListPeli.Classes
         public static float SCREEN_W_RATIO = 1;
         public static float SCREEN_H_RATIO = 1;
         public static float SCREEN_RATIO;
+        //public static float SCREEN_FLUCTUATION;
 
         public static int w_PX; // Device screen width in pixels.
         public static int h_PX; // Device screen height in pixels.
@@ -37,11 +29,27 @@ namespace ScoreListPeli.Classes
             // Initialize screen size ratios.
             SCREEN_H_RATIO = (float)h_PX / (float)GAME_HEIGHT;
             SCREEN_W_RATIO = (float)w_PX / (float)GAME_WIDTH;
-            SCREEN_RATIO = SCREEN_H_RATIO / SCREEN_W_RATIO;
+            SCREEN_RATIO = (float)h_PX / (float)w_PX;
+            //SCREEN_FLUCTUATION = SCREEN_RATIO * 10f;
         }
-        
-                
 
+        private static Random rand = new Random(DateTime.Now.Millisecond);
+        
+        // Returns random integer between min and max.
+        public static int randonInt(int min, int max)
+        {
+            return rand.Next(min, max);
+        }
+
+        public static bool checkPosition(float target, float selection, int size)
+        {
+            if (target + size / 2 < selection + size && target + size / 2 > selection - size)
+                return true;
+            else
+                return false;
+        }
+
+        // Scales the given Bitmap to correct size.
         public static Bitmap ScaleBitmap(Bitmap temp, int newWidth, int newHeight)
         {
             float width = temp.Width;
@@ -58,6 +66,19 @@ namespace ScoreListPeli.Classes
 
             temp.Recycle();
             return resizedBitmap;
+        }
+        
+        public static void ScaleAnimation(ref AnimationDrawable animation, int newWidth, int newHeight)
+        {
+            AnimationDrawable new_animation = new AnimationDrawable();
+            for (int i = 0; i < animation.NumberOfFrames; i++)
+            {
+                Bitmap temp = ((BitmapDrawable)animation.GetFrame(i)).Bitmap;
+                temp = ScaleBitmap(temp, newWidth, newHeight);
+                new_animation.AddFrame(new BitmapDrawable(temp), animation.GetDuration(i));
+            }
+
+            animation = new_animation;
         }
 
         // Converts Coordinates for display screen size.

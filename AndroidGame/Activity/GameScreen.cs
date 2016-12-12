@@ -1,20 +1,16 @@
 using System;
-using System.Collections.Generic;
-
 using Android.App;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using Android.Graphics;
-using Android.Graphics.Drawables;
 using System.Timers;
 using ScoreListPeli.Classes;
 using Android.Content;
+using Android.Views.InputMethods;
 
 namespace ScoreListPeli
 {
-    [Activity(Label = "GameScreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
+    [Activity(Label = "GameScreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, WindowSoftInputMode = SoftInput.StateAlwaysHidden)]
 	public class GameScreen : Activity
 	{
         private static string LOG_TAG = "GameScreen_Activity"; // Activity log tag.
@@ -22,6 +18,7 @@ namespace ScoreListPeli
         protected ObjDrawer mObjDrawer;
 
         RelativeLayout layout;
+        private Timer timer;
 
        //  private List<Coordinate> slash; // moved to ObjDrawer class.
 
@@ -60,11 +57,12 @@ namespace ScoreListPeli
                 RelativeLayout.LayoutParams.MatchParent
             ));
 
+
             //slash = new List<Coordinate>();
 
             // Initialize lists for imageViews.
             //fruits = new List<ImageView>();
-           // fruits = new List<FallObject_normal>();
+            // fruits = new List<FallObject_normal>();
             //fruitAnimation = new List<AnimationDrawable>();
 
             /*
@@ -115,8 +113,8 @@ namespace ScoreListPeli
             mObjDrawer.SetWillNotDraw(false);
             */
 
-            
-            Timer timer = new Timer()
+
+            timer = new Timer()
             {
                 AutoReset = true,
                 Interval = TimeSpan.FromMilliseconds(100).Milliseconds
@@ -136,6 +134,8 @@ namespace ScoreListPeli
                 Intent scoreResult = new Intent(this, typeof(MainMenu));
                 scoreResult.PutExtra("score", mObjDrawer.getScore());
                 SetResult(Result.Ok, scoreResult);
+                timer.Stop();
+                timer.Close();
                 Finish();
             }
 
@@ -143,13 +143,6 @@ namespace ScoreListPeli
             mObjDrawer.PostInvalidate();
         }
 
-
-        public void reDraw(View v)
-        {
-            //mObjDrawer.fallObject();
-            mObjDrawer.Invalidate();
-        }
-        
 
 
         public override bool OnTouchEvent(MotionEvent e)
@@ -159,12 +152,13 @@ namespace ScoreListPeli
             float x = e.GetX();
             float y = e.GetY();
 
+            
             if (e.Action == MotionEventActions.Move)
             {
                 // User still presses the screen.
-                mObjDrawer.addSlashPoint(new Coordinate(x, y));
+                mObjDrawer.addEndPoint(new Classes.Coordinate(x, y));
                 // slash.Add(new Coordinate(x, y));
-                
+
                 /*
                 Console.Out.Write(" - Pointer location: X:");
                 Console.Out.Write(x);
@@ -173,10 +167,16 @@ namespace ScoreListPeli
                 */
 
             }
-
+            
+            else if (e.Action == MotionEventActions.Down)
+            {
+                // User pressed the screen.
+                mObjDrawer.addStartPoint(new Coordinate(x, y));
+            }
             else if (e.Action == MotionEventActions.Up)
             {
                 // User released the finger.
+                mObjDrawer.addEndPoint(new Classes.Coordinate(x, y));
                 mObjDrawer.checkSlash(); // Checks the slash area.
 
                 /*     
@@ -188,12 +188,7 @@ namespace ScoreListPeli
 
             }
 
-            /*  If required, is here.
-            else if (e.Action == MotionEventActions.Down)
-            {
-                // User pressed the screen.
-            }
-            */
+            
 
             //reDraw(CurrentFocus);
             return base.OnTouchEvent(e);

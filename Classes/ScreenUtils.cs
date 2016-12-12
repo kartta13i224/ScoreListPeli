@@ -43,8 +43,11 @@ namespace ScoreListPeli.Classes
 
         public static bool checkPosition(float target, float selection, int size)
         {
-            // target.left < selection
-            if (target < selection && target + size > selection)
+            /*
+             *  slash.x > object.x && slash.x < object.x + object.size
+             *  slash.y > object.y && slash.y < object.y + object.size 
+             */
+            if (selection > target && selection < target + size)
                 return true;
             else
                 return false;

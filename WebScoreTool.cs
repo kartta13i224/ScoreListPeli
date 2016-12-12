@@ -3,7 +3,8 @@ using System.Net;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-
+using System.Net.Http;
+using System.Collections.Generic;
 
 namespace ScoreListPeli
 {
@@ -35,29 +36,63 @@ namespace ScoreListPeli
         }
 
         // Returns true if everything went ok, otherwise false.
-        public bool write(HiScoreObj.ScoreObj score)
+        public async void write(HiScoreObj.ScoreObj score)
         {
+
+
+
+            
+            if (!( await PostScore(score)))
+            {
+                Console.WriteLine("Error: no network connection!");
+            }
+            /*
+           try
+           {
+
+               var httpWebRequest = (HttpWebRequest)WebRequest.Create(URL_BASE + GET_POST);
+               httpWebRequest.ContentType = "application/json";
+               httpWebRequest.Method = "POST";
+
+
+
+
+               using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+               {
+                   string ScoresAsJson = JsonConvert.SerializeObject(score);
+                   streamWriter.Write(ScoresAsJson);
+
+                   streamWriter.Flush();
+                   streamWriter.Close();
+               }
+               /*
+               var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+               using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+               {
+                   var result = streamReader.ReadToEnd();
+               }
+               
+        }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+
+            return true;
+            */
+        }
+
+        protected async Task<bool> PostScore(HiScoreObj.ScoreObj score)
+        {
+            WebClient client = new WebClient();
+            Uri uri = new Uri(URL_BASE + GET_POST);
+
+            string ScoresAsJson = JsonConvert.SerializeObject(score);
             try
             {
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create(URL_BASE + GET_POST);
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Method = "POST";
-
-                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-                {
-                    string ScoresAsJson = JsonConvert.SerializeObject(score);
-                    streamWriter.Write(ScoresAsJson);
-
-                    streamWriter.Flush();
-                    streamWriter.Close();
-                }
-                /*
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                {
-                    var result = streamReader.ReadToEnd();
-                }
-                */
+                client.UploadStringCompleted += client_UploadStringCompleted;
+                client.UploadStringAsync(uri, ScoresAsJson);
             }
             catch (Exception e)
             {
@@ -66,6 +101,39 @@ namespace ScoreListPeli
             }
 
             return true;
+
+            /*
+            try
+            {
+                    using (var client = new HttpClient())
+                {
+                    var values = new Dictionary<string, string>
+                    {
+                       { "Name", score.Name },
+                       { "Score", score.Score.ToString() }
+                    };
+
+                    var content = new FormUrlEncodedContent(values);
+
+                    var response = await client.PostAsync(URL_BASE + GET_POST, content);
+
+                    var responseString = await response.Content.ReadAsStringAsync();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+
+            return true;
+            */
+        }
+
+        void client_UploadStringCompleted(object sender, UploadStringCompletedEventArgs e)
+        {
+            // Get's called when sending post is done!
+            Console.WriteLine(e);
         }
 
         protected async Task<string> FetchScoreList(string url)

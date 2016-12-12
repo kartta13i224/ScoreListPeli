@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 using Android.Content;
 using Android.Graphics;
+using Android.Graphics.Drawables;
 using ScoreListPeli.Classes;
 using System;
 
@@ -19,16 +20,23 @@ namespace ScoreListPeli
         private Bitmap heart;
         private static readonly int HEART_ICON_SPACE = 5;
 
+
         private List<ObjectBounds> object_locations;
         private int counter;
         private int counter_check;
         private int counter_diff;
-        private int MAX = 15;
-        private int MIN = 8;
+        private int MAX = 20;
+        private int MIN = 10;
 
+        // Variables for slash graphics.
         private List<Coordinate> slash;
-
-
+        private int[] slashLine_Bounds = {0,0,0,0};
+        private Coordinate slash_startPoint;
+        private Coordinate slash_endPoint;
+        private GradientDrawable.Orientation orientation;
+        private int[] slash_color = { Color.Gray, Color.DarkGray };
+        private bool slash_Done = false;
+        private bool slash_drawn = true;
 
         public ObjDrawer(Context context) :
             base(context)
@@ -65,21 +73,26 @@ namespace ScoreListPeli
                 max_speed = 5;
             }
 
-            ObjectBounds temp = new ObjectBounds(max_speed);
-            temp.size = ScreenUtils.randonInt(50,100) * (int)ScreenUtils.SCREEN_RATIO;
-            temp.score = 100 / temp.size * 2;
-            temp.left = ScreenUtils.randonInt(ScreenUtils.GAME_WIDTH / 10, ScreenUtils.GAME_WIDTH - ScreenUtils.GAME_WIDTH / 10 - temp.size);
-            temp.right = temp.left + temp.size;
-            temp.top = 0;
-            temp.bottom = temp.size;
+            ObjectBounds temp = new ObjectBounds(max_speed); // Random speed.
+
+            // Randomized x starting point.
+            int left = ScreenUtils.randonInt(ScreenUtils.GAME_WIDTH / 10, ScreenUtils.GAME_WIDTH - ScreenUtils.GAME_WIDTH / 10 - temp.size_x);
+
+            // Set starting coordinates.
+            int[] rectBounds = ScreenUtils.convertBounds(left, 0, left + temp.size_x, temp.size_y);
+            temp.left = rectBounds[0];
+            temp.top = rectBounds[1];
+            temp.right = rectBounds[2];
+            temp.bottom = rectBounds[3];
 
             object_locations.Add(temp);
             counter_diff++;
 
-            if (MIN >= 1 && counter_diff == 10)
+            if (MIN >= 5 && counter_diff >= 10)
             {
                 MAX--;
                 MIN--;
+                counter_diff = 0;
             }
 
             counter_check = ScreenUtils.randonInt(MIN, MAX);
@@ -96,7 +109,7 @@ namespace ScoreListPeli
                 bound.increaseSpeed();
             }
 
-            if (counter == counter_check)
+            if (counter >= counter_check)
             {
                 counter = 0;
                 generateObject();
@@ -107,34 +120,108 @@ namespace ScoreListPeli
         public void addSlashPoint(Coordinate point)
         {
             slash.Add(point);
-            Console.Out.Write(" - Pointer location: X:");
-            Console.Out.Write(point.x);
-            Console.Out.Write(" Y:");
-            Console.Out.WriteLine(point.y);
-            // If slash is too long, remove at the start.
-            if (slash.Count > 120)
-            {
-                Console.Out.Write("TOO MANY, DELETED FIRST. Capacity: ");
-                Console.Out.WriteLine(slash.Count);
-                slash.RemoveAt(0);
-            }
+            Console.Out.Write("Slash length: ");
+            Console.Out.WriteLine(slash.Count);
         }
+
+        // Starts slash.
+        public void addStartPoint(Coordinate point)
+        {
+            slash_drawn = false;
+            slash_startPoint = point;
+            slashLine_Bounds[0] = (int)point.x;
+            slashLine_Bounds[1] = (int)point.y;
+            
+        }
+
+        // Changes end point.
+        public void addEndPoint(Coordinate point)
+        {
+            slash_endPoint = point;
+            slashLine_Bounds[2] = (int)point.x;
+            slashLine_Bounds[3] = (int)point.y;
+        }
+
 
         // Checks the user's slash area for if it hit any of the falling objects.
         public void checkSlash()
         {
+            float x_start = slash_startPoint.x;
+            float y_start = slash_startPoint.y;
+            float x_end = slash_endPoint.x;
+            float y_end = slash_endPoint.y;
+
+            float x_diff = x_end - x_start;
+            float y_diff = y_end - y_start;
+            int steps = 1;
+
+            if (Math.Abs(x_diff) > Math.Abs(y_diff))
+                steps = Math.Abs((int)x_diff);
+            else
+                steps = Math.Abs((int)y_diff);
+
+            float x_stepValue = x_diff / steps;
+            float y_stepValue = y_diff / steps;
+
+            // Set default values.
+            slashLine_Bounds[0] = (int)x_start;
+            slashLine_Bounds[1] = (int)y_start;
+            slashLine_Bounds[2] = (int)x_end;
+            slashLine_Bounds[3] = (int)y_end;
+
+         
+
+            /*
+            if (x_diff > y_diff)
+            {
+                // From right to left
+                if (x_start > x_end)
+                    orientation = GradientDrawable.Orientation.RightLeft;
+
+                // Fromt left to right
+                else
+                    orientation = GradientDrawable.Orientation.LeftRight;
+            }
+            else
+            {
+                // From bottom to top
+                if (y_start > y_end)
+                    orientation = GradientDrawable.Orientation.BottomTop;
+
+                // Fromt top to bottom
+                else
+                    orientation = GradientDrawable.Orientation.TopBottom;
+            }
+            */
+
+            addSlashPoint(new Coordinate(x_start, y_start)); // Start point.
+            for (int i = 1; i < steps; i++)
+            {
+                x_start = x_start + x_stepValue;
+                y_start = y_start + y_stepValue;
+                addSlashPoint(new Coordinate(x_start, y_start));
+            }
+
             List<ObjectBounds> deleteObjects = new List<ObjectBounds>();
             foreach (ObjectBounds bound in object_locations)
             {
-                Coordinate check = ScreenUtils.ConvertCoordinate(bound.getCoordinate());
+                Coordinate check = bound.getCoordinate();
                 
                 foreach (Coordinate slashpoint in slash)
                 {
-                    // Is within slash y range, uses small fluctuation.
-                    if (ScreenUtils.checkPosition(check.x, slashpoint.x, bound.size) && ScreenUtils.checkPosition(check.y, slashpoint.y, bound.size))
+                    // If user has earned score already, do not check again.
+                    if (!bound.is_score_given())
                     {
-                        HIGH_SCORE = HIGH_SCORE + bound.score; // Increase score.
-                        deleteObjects.Add(bound);
+                        // Is object within slash x range.
+                        if (ScreenUtils.checkPosition(check.x, slashpoint.x, bound.size_x))
+                        {
+                            // Is object within slash y range.
+                            if (ScreenUtils.checkPosition(check.y, slashpoint.y, bound.size_y))
+                            {
+                                HIGH_SCORE = HIGH_SCORE + bound.getScore(); // Increase score.
+                                deleteObjects.Add(bound);
+                            }  
+                        }
                     }
                 }
             }
@@ -144,9 +231,8 @@ namespace ScoreListPeli
                 object_locations.Remove(delete);
             }
 
+            slash_Done = true;
             slash.Clear(); // Clear user's slash until a new slash is made.
-            Console.Out.Write("Slash cleared. Capacity: ");
-            Console.Out.WriteLine(slash.Capacity);
         }
 
         public int getScore()
@@ -192,30 +278,31 @@ namespace ScoreListPeli
             // Draw fall object.
             paint.SetARGB(250, 255, 0, 0); // RED
             List<ObjectBounds> deleteObjects = new List<ObjectBounds>();
+            
 
             foreach (var bound in object_locations)
             {
-                if (bound.top >= ScreenUtils.GAME_HEIGHT)
+                if (bound.top >= ScreenUtils.GAME_HEIGHT * ScreenUtils.SCREEN_H_RATIO)
                 {
                     LIVES = LIVES - 1;
                     deleteObjects.Add(bound);
                 }
 
-                bounds = ScreenUtils.convertBounds(bound.left, bound.top, bound.right, bound.bottom);
-                Temp.Set(bounds[0], bounds[1], bounds[2], bounds[3]);
+                // Bounds are already converted.
+                Temp.Set(bound.left, bound.top, bound.right, bound.bottom);
                 canvas.DrawOval(Temp, paint);
                 canvas.DrawOval(Temp, stroke_paint);
             }
 
-            
             foreach (ObjectBounds delete in deleteObjects)
             {
                 object_locations.Remove(delete);
             }
 
-            // Draw user slash effect.
-            int RGB = 210; // SILVER8
 
+            // Draw user slash effect.
+            /*
+            int RGB = 210; // SILVER8
             foreach (Coordinate slashPoint in slash)
             {
                 paint.SetARGB(200, RGB, RGB, RGB);
@@ -224,6 +311,38 @@ namespace ScoreListPeli
                 if (!(RGB <= 0))
                     RGB--;
             }
+            */
+
+            // Draw user slash line effect.
+            if (!slash_drawn)
+            {
+                if (slash_Done)
+                {
+                    paint.SetARGB(180, 150, 150, 150);
+                    slash_Done = false;
+                    slash_drawn = true;
+                }
+                else
+                {
+                    paint.SetARGB(255, 210, 210, 210);
+                }
+
+
+                paint.SetStyle(Paint.Style.FillAndStroke); // Stroke only
+                paint.StrokeWidth = 5 * ScreenUtils.SCREEN_RATIO; // Stroke size
+                canvas.DrawLine(slashLine_Bounds[0], slashLine_Bounds[1], slashLine_Bounds[2], slashLine_Bounds[3], paint);
+            }
+           
+                
+                /*
+                GradientDrawable slashLine = new GradientDrawable(orientation, slash_color);
+                slashLine.SetShape(ShapeType.Line);
+                slashLine.SetSize((int)(ScreenUtils.GAME_WIDTH * ScreenUtils.SCREEN_W_RATIO), (int)(ScreenUtils.GAME_HEIGHT * ScreenUtils.SCREEN_H_RATIO));
+                slashLine.SetBounds(slashLine_Bounds[0], slashLine_Bounds[1], slashLine_Bounds[2], slashLine_Bounds[3]);
+                slashLine.Draw(canvas);
+                */
+           
+
 
             /*
              * 
@@ -232,6 +351,7 @@ namespace ScoreListPeli
              */
 
             // Draw header background
+            paint.SetARGB(255, 0, 0, 0);
             bounds = ScreenUtils.convertBounds(0, 0, ScreenUtils.GAME_WIDTH, ScreenUtils.GAME_HEIGHT / 12);
             Temp.Set(bounds[0], bounds[1], bounds[2], bounds[3]);
             paint.SetShader(new LinearGradient(bounds[0], bounds[1], bounds[2], bounds[3], Color.Argb(255, 0, 115, 255), Color.Argb(255, 0, 230, 255), Shader.TileMode.Repeat));

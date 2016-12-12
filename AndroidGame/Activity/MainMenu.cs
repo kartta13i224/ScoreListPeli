@@ -6,6 +6,7 @@ using Android.Widget;
 using ScoreListPeli.Classes;
 using Android.Views.InputMethods;
 using Android.Net;
+using Android.Views;
 
 namespace ScoreListPeli
 {
@@ -55,6 +56,15 @@ namespace ScoreListPeli
             Rate = FindViewById<Button>(Resource.Id.BTN_Rate);
 
             StartGame.Click += delegate {
+
+                // Hide keyboard when game starts.
+                View view = CurrentFocus;
+                if (view != null)
+                {
+                    InputMethodManager imm = (InputMethodManager)GetSystemService(Context.InputMethodService);
+                    imm.HideSoftInputFromWindow(view.WindowToken, 0);
+                }
+
                 Console.Out.WriteLine(LOG_TAG + " New game button pressed!");
                 var GameActivity = new Intent(this, typeof(GameScreen));
                 StartActivityForResult(GameActivity, 0);
@@ -83,66 +93,75 @@ namespace ScoreListPeli
             base.OnActivityResult(requestCode, resultCode, data);
             if (resultCode == Result.Ok)
             {
-                int userScore = 0;
-                userScore = data.GetIntExtra("score", userScore);
-
-                var scoreDialog = new AlertDialog.Builder(this);
-                EditText userNickInput = new EditText(this);
-
-                string userName = string.Empty;
-                //userNickInput.Text = GetSavedInput(input, out selectedInput); // If screen portrait changed, not used.
-                userNickInput.InputType = Android.Text.InputTypes.TextVariationShortMessage; // Type of input.
-
-                scoreDialog.SetTitle("Hiscore: " + userScore); // Set title.
-                scoreDialog.SetView(userNickInput); // Set editText object into dialog.
-
-                // Create an OK button.
-                scoreDialog.SetPositiveButton(
-                    "Send Hiscore",
-                    (see, ess) =>
+                if (data != null)
                 {
-                    if (userNickInput.Text != string.Empty && userNickInput.Length() > 0)
+                    int userScore = 0;
+                    userScore = data.GetIntExtra("score", userScore);
+
+                    var scoreDialog = new AlertDialog.Builder(this);
+                    EditText userNickInput = new EditText(this);
+
+                    string userName = string.Empty;
+                    //userNickInput.Text = GetSavedInput(input, out selectedInput); // If screen portrait changed, not used.
+                    userNickInput.InputType = Android.Text.InputTypes.TextVariationShortMessage; // Type of input.
+
+                    scoreDialog.SetTitle("Hiscore: " + userScore); // Set title.
+                    scoreDialog.SetView(userNickInput); // Set editText object into dialog.
+
+                    // Create an OK button.
+                    scoreDialog.SetPositiveButton("Send Hiscore", (EventHandler<DialogClickEventArgs>)null);
+                    scoreDialog.SetNegativeButton("Discard", (EventHandler<DialogClickEventArgs>)null);
+
+                    var dialog = scoreDialog.Create();
+
+                    dialog.Show();
+                    ShowKeyboard(userNickInput);
+
+                    var BTN_send = dialog.GetButton((int)DialogButtonType.Positive);
+                    var BTN_disc = dialog.GetButton((int)DialogButtonType.Negative);
+
+                    BTN_send.Click += (sender, args) =>
                     {
-                        // Check internet connection access.
-                        ConnectivityManager connectivityManager = (ConnectivityManager)GetSystemService(ConnectivityService);
-                        NetworkInfo activeConnection = connectivityManager.ActiveNetworkInfo;
-                        bool isOnline = (activeConnection != null) && activeConnection.IsConnected;
-                        NetworkInfo wifiInfo = connectivityManager.GetNetworkInfo(ConnectivityType.Wifi); // Get wifi state
-                        NetworkInfo mobileInfo = connectivityManager.GetNetworkInfo(ConnectivityType.Mobile); // Get mobile state
-
-                        // If either of the networks have access to internet...
-                        if (wifiInfo.IsConnected || mobileInfo.IsRoaming && mobileInfo.IsConnected)
+                        if (userNickInput.Text != string.Empty && userNickInput.Length() > 0)
                         {
-                            WebScoreTool webScoreTool = new WebScoreTool(); // Get access to web tools.
-                            HiScoreObj.ScoreObj temp = new HiScoreObj.ScoreObj(userNickInput.Text, userScore); // Create temporary hiscore Object.
+                            // Check internet connection access.
+                            ConnectivityManager connectivityManager = (ConnectivityManager)GetSystemService(ConnectivityService);
+                            NetworkInfo activeConnection = connectivityManager.ActiveNetworkInfo;
+                            bool isOnline = (activeConnection != null) && activeConnection.IsConnected;
+                            NetworkInfo wifiInfo = connectivityManager.GetNetworkInfo(ConnectivityType.Wifi); // Get wifi state
+                            NetworkInfo mobileInfo = connectivityManager.GetNetworkInfo(ConnectivityType.Mobile); // Get mobile state
 
-                            // Send the object to server.
-                            if (!webScoreTool.write(temp))
+                            // If either of the networks have access to internet...
+                            if (wifiInfo.IsConnected || mobileInfo.IsConnected)
                             {
-                                
+                                WebScoreTool webScoreTool = new WebScoreTool(); // Get access to web tools.
+                                HiScoreObj.ScoreObj temp = new HiScoreObj.ScoreObj(userNickInput.Text, userScore); // Create temporary hiscore Object.
+
+                                webScoreTool.write(temp); // Send the object to server.
+                                HideKeyboard(userNickInput); // Hide keyboard.
+                                dialog.Dismiss(); // Dismiss dialog.
+                            }
+
+                            else
+                            {
+                                Toast.MakeText(this, "Check your internet connection!", ToastLength.Short).Show();
                             }
                         }
 
+                        // Not valid username.
                         else
                         {
-                            Toast.MakeText(this, "Check your internet connection!", ToastLength.Short).Show();
+                            Toast.MakeText(this, "Write a proper username!", ToastLength.Short).Show();
                         }
-                            
-                                
-                    }
+                    };
 
-                    // Not valid username.
-                    else
+                    // Exit button. No hiscores will be saved.
+                    BTN_disc.Click += (sender, args) =>
                     {
-                        Toast.MakeText(this, "Write a proper username!", ToastLength.Short).Show();
-                    }
-                    HideKeyboard(userNickInput);
-                });
-
-                // Exit button. No hiscores will be saved.
-                scoreDialog.SetNegativeButton("Cancel", (afk, kfa) => { HideKeyboard(userNickInput); });
-                scoreDialog.Show();
-                ShowKeyboard(userNickInput);
+                        HideKeyboard(userNickInput);
+                        dialog.Dismiss(); // Dismiss dialog.
+                    };
+                }
 
             }
         }
@@ -158,8 +177,12 @@ namespace ScoreListPeli
         // Hides the keyboard when not in the EditText component.
         private void HideKeyboard(EditText userInput)
         {
-            InputMethodManager imm = (InputMethodManager)this.GetSystemService(Context.InputMethodService);
-            imm.HideSoftInputFromWindow(userInput.WindowToken, 0);
+            if (userInput != null)
+            {
+                InputMethodManager imm = (InputMethodManager)this.GetSystemService(Context.InputMethodService);
+                imm.HideSoftInputFromWindow(userInput.WindowToken, 0);
+            }
+            
         }
 
 

@@ -10,6 +10,8 @@ using Android.Graphics;
 using Android.Graphics.Drawables;
 using System.Timers;
 using ScoreListPeli.Classes;
+using Android.Content;
+
 namespace ScoreListPeli
 {
     [Activity(Label = "GameScreen", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
@@ -21,7 +23,7 @@ namespace ScoreListPeli
 
         RelativeLayout layout;
 
-        private List<Coordinate> slash;
+       //  private List<Coordinate> slash; // moved to ObjDrawer class.
 
 
         /*
@@ -58,7 +60,7 @@ namespace ScoreListPeli
                 RelativeLayout.LayoutParams.MatchParent
             ));
 
-            slash = new List<Coordinate>();
+            //slash = new List<Coordinate>();
 
             // Initialize lists for imageViews.
             //fruits = new List<ImageView>();
@@ -125,10 +127,15 @@ namespace ScoreListPeli
             
         }
 
+        // Used to call UI thread from timer.
         private void refreshObjects(object sender, ElapsedEventArgs e)
         {
+            // GAME OVER
             if (mObjDrawer.LIVES <= 0)
             {
+                Intent scoreResult = new Intent(this, typeof(MainMenu));
+                scoreResult.PutExtra("score", mObjDrawer.getScore());
+                SetResult(Result.Ok, scoreResult);
                 Finish();
             }
 
@@ -152,23 +159,11 @@ namespace ScoreListPeli
             float x = e.GetX();
             float y = e.GetY();
 
-            // TODO Scale x and y to game screen.
-
-            // TODO calculate slash distance.
-
-            // TODO remove any objects which were "slashed" over.
-
-            // TODO increase user's highscore.
-
-            // TODO implement user high score.
-
-            // TODO implement user health.
-
-
             if (e.Action == MotionEventActions.Move)
             {
                 // User still presses the screen.
-                slash.Add(new Coordinate(x, y));
+                mObjDrawer.addSlashPoint(new Coordinate(x, y));
+                // slash.Add(new Coordinate(x, y));
                 
                 /*
                 Console.Out.Write(" - Pointer location: X:");
@@ -178,22 +173,27 @@ namespace ScoreListPeli
                 */
 
             }
-            else if (e.Action == MotionEventActions.Down)
-            {
-                // User pressed the screen.
-            }
+
             else if (e.Action == MotionEventActions.Up)
             {
                 // User released the finger.
+                mObjDrawer.checkSlash(); // Checks the slash area.
+
                 /*     
                 Console.Out.Write(" - Pointer location: X:");
                 Console.Out.Write(x);
                 Console.Out.Write(" Y:");
                 Console.Out.WriteLine(y);
                 */
-                mObjDrawer.checkSlash(slash);
-                slash.Clear();
+
             }
+
+            /*  If required, is here.
+            else if (e.Action == MotionEventActions.Down)
+            {
+                // User pressed the screen.
+            }
+            */
 
             //reDraw(CurrentFocus);
             return base.OnTouchEvent(e);

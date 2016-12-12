@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Android.Content;
 using Android.Graphics;
 using ScoreListPeli.Classes;
+using System;
 
 namespace ScoreListPeli
 {
@@ -20,6 +21,14 @@ namespace ScoreListPeli
 
         private List<ObjectBounds> object_locations;
         private int counter;
+        private int counter_check;
+        private int counter_diff;
+        private int MAX = 15;
+        private int MIN = 8;
+
+        private List<Coordinate> slash;
+
+
 
         public ObjDrawer(Context context) :
             base(context)
@@ -30,29 +39,53 @@ namespace ScoreListPeli
             Initialize();
         }
 
+        // Initializes stuff.
         private void Initialize()
         {
+            // Initialize lists.
+            slash = new List<Coordinate>();
             object_locations = new List<ObjectBounds>();
 
-            counter = 0;
+            // Initialize values for creating new objects.
+            counter = MIN;
+            counter_diff = 0;
+            counter_check = ScreenUtils.randonInt(MIN, MAX);
+
             heart = BitmapFactory.DecodeResource(Resources, Resource.Drawable.Hart);
             heart = ScreenUtils.ScaleBitmap(heart, 30, 30);
 
         }
 
+        // Generates a falling object in a random location.
         public void generateObject()
         {
-            ObjectBounds temp = new ObjectBounds();
+            int max_speed = HIGH_SCORE / 10;
+            if (max_speed <= 3)
+            {
+                max_speed = 5;
+            }
+
+            ObjectBounds temp = new ObjectBounds(max_speed);
             temp.size = ScreenUtils.randonInt(50,100) * (int)ScreenUtils.SCREEN_RATIO;
             temp.score = 100 / temp.size * 2;
-            temp.left = ScreenUtils.randonInt(ScreenUtils.GAME_WIDTH / 10, ScreenUtils.GAME_WIDTH - ScreenUtils.GAME_WIDTH / 10);
+            temp.left = ScreenUtils.randonInt(ScreenUtils.GAME_WIDTH / 10, ScreenUtils.GAME_WIDTH - ScreenUtils.GAME_WIDTH / 10 - temp.size);
             temp.right = temp.left + temp.size;
             temp.top = 0;
             temp.bottom = temp.size;
 
             object_locations.Add(temp);
+            counter_diff++;
+
+            if (MIN >= 1 && counter_diff == 10)
+            {
+                MAX--;
+                MIN--;
+            }
+
+            counter_check = ScreenUtils.randonInt(MIN, MAX);
         }
 
+        // Makes falling objects to fall and calls new objects.
         public void fallObject()
         {
             counter++;
@@ -63,16 +96,33 @@ namespace ScoreListPeli
                 bound.increaseSpeed();
             }
 
-            if (counter == 10)
+            if (counter == counter_check)
             {
                 counter = 0;
                 generateObject();
             }
         }
 
-        public void checkSlash(List<Coordinate> slash)
+        // Adds given coordinate to slash list.
+        public void addSlashPoint(Coordinate point)
         {
-           
+            slash.Add(point);
+            Console.Out.Write(" - Pointer location: X:");
+            Console.Out.Write(point.x);
+            Console.Out.Write(" Y:");
+            Console.Out.WriteLine(point.y);
+            // If slash is too long, remove at the start.
+            if (slash.Count > 120)
+            {
+                Console.Out.Write("TOO MANY, DELETED FIRST. Capacity: ");
+                Console.Out.WriteLine(slash.Count);
+                slash.RemoveAt(0);
+            }
+        }
+
+        // Checks the user's slash area for if it hit any of the falling objects.
+        public void checkSlash()
+        {
             List<ObjectBounds> deleteObjects = new List<ObjectBounds>();
             foreach (ObjectBounds bound in object_locations)
             {
@@ -83,6 +133,7 @@ namespace ScoreListPeli
                     // Is within slash y range, uses small fluctuation.
                     if (ScreenUtils.checkPosition(check.x, slashpoint.x, bound.size) && ScreenUtils.checkPosition(check.y, slashpoint.y, bound.size))
                     {
+                        HIGH_SCORE = HIGH_SCORE + bound.score; // Increase score.
                         deleteObjects.Add(bound);
                     }
                 }
@@ -92,8 +143,15 @@ namespace ScoreListPeli
             {
                 object_locations.Remove(delete);
             }
-            
 
+            slash.Clear(); // Clear user's slash until a new slash is made.
+            Console.Out.Write("Slash cleared. Capacity: ");
+            Console.Out.WriteLine(slash.Capacity);
+        }
+
+        public int getScore()
+        {
+            return HIGH_SCORE;
         }
 
 
@@ -149,11 +207,23 @@ namespace ScoreListPeli
                 canvas.DrawOval(Temp, stroke_paint);
             }
 
+            
             foreach (ObjectBounds delete in deleteObjects)
             {
                 object_locations.Remove(delete);
             }
 
+            // Draw user slash effect.
+            int RGB = 210; // SILVER8
+
+            foreach (Coordinate slashPoint in slash)
+            {
+                paint.SetARGB(200, RGB, RGB, RGB);
+                Temp.Set(slashPoint.x, slashPoint.y, slashPoint.x + 5 * ScreenUtils.SCREEN_W_RATIO, slashPoint.y + 5 * ScreenUtils.SCREEN_H_RATIO);
+                canvas.DrawOval(Temp, paint);
+                if (!(RGB <= 0))
+                    RGB--;
+            }
 
             /*
              * 

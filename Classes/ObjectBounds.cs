@@ -12,10 +12,10 @@ namespace ScoreListPeli.Classes
         public int score { get; set; }
 
         private int speedBoost;
-        public ObjectBounds()
+        public ObjectBounds(int maxSpeed)
         {
             speedBoost = 0;
-            speed = 1; // default speed
+            speed = ScreenUtils.randonInt(1, maxSpeed); // default speed
             size = 50;
         }
 
@@ -28,7 +28,7 @@ namespace ScoreListPeli.Classes
         {
             speedBoost++;
 
-            if (speedBoost >= 3)
+            if (speedBoost >= 4 && speed < 15 || speedBoost >= 10 && speed >= 15)
             {
                 speedBoost = 0;
                 speed++;

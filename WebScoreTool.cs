@@ -2,7 +2,6 @@ using System;
 using System.Net;
 using System.IO;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 
@@ -35,7 +34,8 @@ namespace ScoreListPeli
             }
         }
 
-        public void write(HiScoreObj.ScoreObj score)
+        // Returns true if everything went ok, otherwise false.
+        public bool write(HiScoreObj.ScoreObj score)
         {
             try
             {
@@ -62,7 +62,10 @@ namespace ScoreListPeli
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                return false;
             }
+
+            return true;
         }
 
         protected async Task<string> FetchScoreList(string url)
@@ -96,8 +99,12 @@ namespace ScoreListPeli
                 return null;
             }
         }
-
-        
-
+        /*
+        // Checks for the device's internet connection.
+        public bool checkInternetConnection()
+        {
+            return false;
+        }
+        */
     }
 }

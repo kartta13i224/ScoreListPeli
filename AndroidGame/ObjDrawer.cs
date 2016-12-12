@@ -69,26 +69,14 @@ namespace ScoreListPeli
         {
             int max_speed = HIGH_SCORE / 10;
             if (max_speed <= 3)
-            {
                 max_speed = 5;
-            }
 
             ObjectBounds temp = new ObjectBounds(max_speed); // Random speed.
-
-            // Randomized x starting point.
-            int left = ScreenUtils.randonInt(ScreenUtils.GAME_WIDTH / 10, ScreenUtils.GAME_WIDTH - ScreenUtils.GAME_WIDTH / 10 - temp.size_x);
-
-            // Set starting coordinates.
-            int[] rectBounds = ScreenUtils.convertBounds(left, 0, left + temp.size_x, temp.size_y);
-            temp.left = rectBounds[0];
-            temp.top = rectBounds[1];
-            temp.right = rectBounds[2];
-            temp.bottom = rectBounds[3];
 
             object_locations.Add(temp);
             counter_diff++;
 
-            if (MIN >= 5 && counter_diff >= 10)
+            if (MIN >= 5 && counter_diff >= 9)
             {
                 MAX--;
                 MIN--;
@@ -104,8 +92,7 @@ namespace ScoreListPeli
             counter++;
             foreach (ObjectBounds bound in object_locations)
             {
-                bound.top = bound.top + bound.speed;
-                bound.bottom = bound.bottom + bound.speed;
+                bound.bounce();
                 bound.increaseSpeed();
             }
 

@@ -1,13 +1,7 @@
 ﻿using System;
 using Android.App;
-using Android.Content;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 using Android.OS;
-using System.Net;
-using System.IO;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -53,27 +47,35 @@ namespace ScoreListPeli
             // Check that ScoreList is available.      
             if (ScoreJSON != null)
             {
-                ScoreJSON = ScoreJSON.Substring(1);
-                // LINK DATA; DESERIALIZE
-                HiScoreObj obj = JsonConvert.DeserializeObject<HiScoreObj>(ScoreJSON) ;
-                //Android.Widget.Toast.MakeText(this, "Data haettu!", Android.Widget.ToastLength.Short).Show();
-                
-                scoreList.Clear(); // Remove old entries from the hiscore list.
-                if (obj != null && obj.HiScores != null)
+                try
                 {
-                    foreach (var ScoreObj in obj.HiScores)
+                    ScoreJSON = ScoreJSON.Substring(1);
+                    // LINK DATA; DESERIALIZE
+                    HiScoreObj obj = JsonConvert.DeserializeObject<HiScoreObj>(ScoreJSON);
+                    //Android.Widget.Toast.MakeText(this, "Data haettu!", Android.Widget.ToastLength.Short).Show();
+
+                    scoreList.Clear(); // Remove old entries from the hiscore list.
+                    if (obj != null && obj.HiScores != null)
                     {
-                        HiScoreObj.ScoreObj temp = new HiScoreObj.ScoreObj(ScoreObj.Name, ScoreObj.Score);
-                        scoreList.Add(temp);
+                        foreach (var ScoreObj in obj.HiScores)
+                        {
+                            HiScoreObj.ScoreObj temp = new HiScoreObj.ScoreObj(ScoreObj.Name, ScoreObj.Score);
+                            scoreList.Add(temp);
+                        }
+                    }
+
+                    if (scoreList != null)
+                    {
+                        // Android.Widget.Toast.MakeText(this, obj.ToString(), Android.Widget.ToastLength.Short).Show();
+                        mListView.Adapter = new ScoreAdapter(this, scoreList.ToArray());
                     }
                 }
-
-                if (scoreList != null)
+                catch(Exception ex)
                 {
-                    // Android.Widget.Toast.MakeText(this, obj.ToString(), Android.Widget.ToastLength.Short).Show();
-                    mListView.Adapter = new ScoreAdapter(this, scoreList.ToArray());
+                    Console.WriteLine("Error in JSONParse: ");
+                    Console.WriteLine(ex);
+                    Toast.MakeText(this, "Check your internet connection!", ToastLength.Short).Show();
                 }
-
             }
 
             else

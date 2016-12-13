@@ -13,16 +13,27 @@ namespace ScoreListPeli.Classes
 
         private bool willBounce = false;
         private bool scoreGiven = false;
-
+        private bool lifeTaken = false;
+        private bool bounceRight = false;
+        private int sideSpeed = 0;
         private int speedBoost;
         public ObjectBounds(int maxSpeed)
         {
             int givenSize = ScreenUtils.randonInt(ScreenUtils.GAME_WIDTH / 16, ScreenUtils.GAME_WIDTH / 5);
             if (1 == ScreenUtils.randonInt(1, 3))
                 willBounce = true;
+            if (willBounce)
+            {
+                if (1 == ScreenUtils.randonInt(1, 2))
+                    bounceRight = true;
+
+                sideSpeed = ScreenUtils.randonInt(0, maxSpeed); // default side speed.
+            }
+            
 
             speedBoost = 0;
             speed = ScreenUtils.randonInt(1, maxSpeed); // default speed
+            
             size_x = givenSize;
             size_y = givenSize;
             score = 100 / givenSize; // Score is based on size, smaller size = higher score. + It's speed.
@@ -47,34 +58,57 @@ namespace ScoreListPeli.Classes
             return new Classes.Coordinate(left, top);
         }
 
+        // Creates bouncing effect if enabled.
         public void bounce()
         {
+           
             if (willBounce)
             {
-                if (right < ScreenUtils.GAME_WIDTH * ScreenUtils.SCREEN_W_RATIO - size_x)
+                // Bounces right until it has reached the side.
+                if (bounceRight)
                 {
-                    left++;
-                    right++;
+                    if (right < (ScreenUtils.GAME_WIDTH - ScreenUtils.GAME_WIDTH / 10) * ScreenUtils.SCREEN_W_RATIO)
+                    {
+                        left = left + sideSpeed * (int)ScreenUtils.SCREEN_W_RATIO;
+                        right = right + sideSpeed * (int)ScreenUtils.SCREEN_W_RATIO;
+                    }
+                    else
+                        bounceRight = false;
                 }
-                else if (left > 0)
-                {
-                    left--;
-                    right--;
-                }
-            }
-            
 
+                // Bounces left until it has reached the side.
+                else
+                {
+                    if (left > ScreenUtils.GAME_WIDTH / 10 * ScreenUtils.SCREEN_W_RATIO)
+                    {
+                        left = left - sideSpeed * (int)ScreenUtils.SCREEN_W_RATIO;
+                        right = right - sideSpeed * (int)ScreenUtils.SCREEN_W_RATIO;
+                    }
+                    else
+                        bounceRight = true;
+                }   
+            }
         }
 
         public int getScore()
         {
             scoreGiven = true;
-            return score + (int)speed / 5;
+            return score + (int)speed / 5 + sideSpeed;
         }
 
         public bool is_score_given()
         {
             return scoreGiven;
+        }
+
+        public void takeLife()
+        {
+            lifeTaken = true;
+        }
+
+        public bool isLifeTaken()
+        {
+            return lifeTaken;
         }
 
         // Moves object down and accelerates it.

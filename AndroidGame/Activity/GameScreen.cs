@@ -19,7 +19,7 @@ namespace ScoreListPeli
 
         RelativeLayout layout;
         private Timer timer;
-
+        private bool can_slash = true;
        //  private List<Coordinate> slash; // moved to ObjDrawer class.
 
 
@@ -156,7 +156,8 @@ namespace ScoreListPeli
             if (e.Action == MotionEventActions.Move)
             {
                 // User still presses the screen.
-                mObjDrawer.addEndPoint(new Classes.Coordinate(x, y));
+                if (can_slash)
+                    mObjDrawer.addEndPoint(new Classes.Coordinate(x, y));
                 // slash.Add(new Coordinate(x, y));
 
                 /*
@@ -171,14 +172,16 @@ namespace ScoreListPeli
             else if (e.Action == MotionEventActions.Down)
             {
                 // User pressed the screen.
-                mObjDrawer.addStartPoint(new Coordinate(x, y));
+                if (can_slash)
+                    mObjDrawer.addStartPoint(new Coordinate(x, y));
             }
             else if (e.Action == MotionEventActions.Up)
             {
+                can_slash = false;
                 // User released the finger.
-                mObjDrawer.addEndPoint(new Classes.Coordinate(x, y));
-                mObjDrawer.checkSlash(); // Checks the slash area.
-
+                mObjDrawer.addEndPoint(new Coordinate(x, y));
+                mObjDrawer.checkSlash(new Coordinate(x, y)); // Checks the slash area.
+                can_slash = true;
                 /*     
                 Console.Out.Write(" - Pointer location: X:");
                 Console.Out.Write(x);

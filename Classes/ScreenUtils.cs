@@ -13,8 +13,8 @@ namespace ScoreListPeli.Classes
         public static readonly int GAME_TEXT_SIZE = GAME_WIDTH / 10;
 
         // Multipliers to resize the components.
-        public static float SCREEN_W_RATIO = 1;
-        public static float SCREEN_H_RATIO = 1;
+        public static float SCREEN_W_RATIO = 1; // Multiplier for device screen's width.
+        public static float SCREEN_H_RATIO = 1; // Multiplier for device screen's height.
         public static float SCREEN_RATIO;
         //public static float SCREEN_FLUCTUATION;
 

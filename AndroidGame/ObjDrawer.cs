@@ -72,7 +72,7 @@ namespace ScoreListPeli
         // Generates a falling object in a random location.
         public void generateObject()
         {
-                int max_speed = HIGH_SCORE / 10;
+                int max_speed = HIGH_SCORE / 100;
                 if (max_speed <= 3)
                     max_speed = 5;
 

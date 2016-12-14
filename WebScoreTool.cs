@@ -36,16 +36,11 @@ namespace ScoreListPeli
         }
 
         // Returns true if everything went ok, otherwise false.
-        public async void write(HiScoreObj.ScoreObj score)
+        public bool write(HiScoreObj.ScoreObj score)
         {
 
-
-
-            
-            if (!( await PostScore(score)))
-            {
-                Console.WriteLine("Error: no network connection!");
-            }
+            return PostScore(score);
+          
             /*
            try
            {
@@ -83,7 +78,7 @@ namespace ScoreListPeli
             */
         }
 
-        protected async Task<bool> PostScore(HiScoreObj.ScoreObj score)
+        protected bool PostScore(HiScoreObj.ScoreObj score)
         {
             WebClient client = new WebClient();
             Uri uri = new Uri(URL_BASE + GET_POST);

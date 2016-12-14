@@ -7,6 +7,7 @@ using ScoreListPeli.Classes;
 using Android.Views.InputMethods;
 using Android.Net;
 using Android.Views;
+using System.Threading.Tasks;
 
 namespace ScoreListPeli
 {
@@ -79,6 +80,7 @@ namespace ScoreListPeli
             Rate.Click += delegate
             {
                 // TODO Rate application
+                Toast.MakeText(this, "To be implemented in a future version.", ToastLength.Short).Show();
                 Console.Out.WriteLine(LOG_TAG + " Rate button pressed!");
             };
 
@@ -115,7 +117,7 @@ namespace ScoreListPeli
                     var dialog = scoreDialog.Create();
 
                     dialog.Show();
-                    ShowKeyboard(userNickInput);
+                    //ShowKeyboard(userNickInput);
 
                     var BTN_send = dialog.GetButton((int)DialogButtonType.Positive);
                     var BTN_disc = dialog.GetButton((int)DialogButtonType.Negative);
@@ -134,12 +136,20 @@ namespace ScoreListPeli
                             // If either of the networks have access to internet...
                             if (wifiInfo.IsConnected || mobileInfo.IsConnected)
                             {
-                                WebScoreTool webScoreTool = new WebScoreTool(); // Get access to web tools.
+                                WebScoreTool webScoreTool = new WebScoreTool();
                                 HiScoreObj.ScoreObj temp = new HiScoreObj.ScoreObj(userNickInput.Text, userScore); // Create temporary hiscore Object.
 
-                                webScoreTool.write(temp); // Send the object to server.
-                                HideKeyboard(userNickInput); // Hide keyboard.
-                                dialog.Dismiss(); // Dismiss dialog.
+                                if (webScoreTool.write(temp))
+                                {
+                                    // Sent successfully.
+                                    //HideKeyboard(userNickInput); // Hide keyboard.
+                                    dialog.Dismiss(); // Dismiss dialog.
+                                }
+                                // Error sending.
+                                else
+                                {
+                                    Toast.MakeText(this, "Check your internet connection!", ToastLength.Short).Show();
+                                }
                             }
 
                             else
@@ -158,7 +168,7 @@ namespace ScoreListPeli
                     // Exit button. No hiscores will be saved.
                     BTN_disc.Click += (sender, args) =>
                     {
-                        HideKeyboard(userNickInput);
+                        //HideKeyboard(userNickInput);
                         dialog.Dismiss(); // Dismiss dialog.
                     };
                 }
@@ -166,6 +176,7 @@ namespace ScoreListPeli
             }
         }
 
+        /*
         // Shows keyboard within the given EditText component.
         private void ShowKeyboard(EditText userInput)
         {
@@ -184,7 +195,7 @@ namespace ScoreListPeli
             }
             
         }
-
+        */
 
         private float ConvertPixelsToDp(float pixelValue)
         {
